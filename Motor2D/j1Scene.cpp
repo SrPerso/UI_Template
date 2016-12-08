@@ -51,9 +51,7 @@ bool j1Scene::Start()
 	
 	// Create elements
 	UIelement* window = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 0, 512, 484, 512 }, p2Point<int>{400, 50},true);
-
-
-	UIelement* button = App->gui->CreateElement(UIBUT, SDL_Rect{ 0, 110, 230, 71 }, p2Point<int>{0, 0},false);
+	UIelement* button = App->gui->CreateElement(UIBUT, SDL_Rect{ 0, 110, 230, 71 }, {0,0}, true);
 	
 	window->AddSon(button);
 	

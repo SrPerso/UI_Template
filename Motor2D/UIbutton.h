@@ -9,6 +9,10 @@ public:
 	bool draw();
 	bool update();
 	void SetNewSCoods(const int&, const int&);
+	void move();
+public:
+	bool isMoving = false;
+	bool canUpdate = false;
 
 };
 

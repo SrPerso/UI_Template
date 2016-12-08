@@ -44,7 +44,7 @@ bool j1Gui::PreUpdate()
 	iterator = elementlist.start;
 
 	while (iterator != nullptr) {
-		//if(iterator->data->IsTheGrandParent() != nullptr)
+		if(iterator->data->IsTheGrandParent() != nullptr)
 		iterator->data->update();
 		iterator = iterator->next;
 	}
@@ -126,26 +126,17 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box,p2Point
 
 UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
 {
-	assert( elementType == UITXT || elementType == UIELEMENT);
+	assert( elementType == UITXT);
 
 	UIelement* created = nullptr;
 	
 	switch (elementType)
 	{
-	case UIELEMENT:
-
-		created = new UIelement(id,box,Position,move);
-		break;
-
 	case UITXT:
 
 		created = new UIText(id, box, text, Position, move);
 		break;
-
-	case UIBUT:
-
-		created = new UIbutton(id,box, Position, move);
-		break;
+		
 	}//switch
 
 	if (created != nullptr)

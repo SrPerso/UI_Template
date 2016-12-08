@@ -21,11 +21,22 @@ bool UIelement::update()
 {
 	bool ret = true;
 
+	iPoint MousePos, MousePos2;
 
-		iPoint MousePos, MousePos2;
+	App->input->GetMousePosition(MousePos.x, MousePos.y);
 
-		App->input->GetMousePosition(MousePos.x, MousePos.y);
+	if (Sons.count() != 0) {
+		p2List_item<UIelement*>*ite = Sons.start;
 
+		while (ite != nullptr) {
+			if (ite->data->isMoving == true)
+				canUpdate = true;
+	
+			ite = ite->next;
+		}
+	}
+	if (canUpdate == false) {
+	
 		if (isMouseRect(MousePos.x, MousePos.y) == true) {
 			elementState = MouseIn;
 
@@ -35,19 +46,27 @@ bool UIelement::update()
 				if (canMove == true) {
 					move();
 				}
+
 			}
 			else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) {
 				elementState = Mouseb2;
+
 			}
+			isMoving = false;
 		}
 		else {
 			elementState = MouseOut;
+			isMoving = false;
 		}
+	}
+	canUpdate = false;
+
 
 		LastPos.x = MousePos.x;
 		LastPos.y = MousePos.y;
 	
 		draw();
+
 
 		if (Sons.count() != 0) {
 			p2List_item<UIelement*>*ite = Sons.start;
@@ -57,7 +76,7 @@ bool UIelement::update()
 				ite = ite->next;
 			}
 		}
-
+	
 	return ret;
 }
 
@@ -87,6 +106,18 @@ void UIelement::move()
 	
 	Position.x += (Mx - LastPos.x );
 	Position.y += (My - LastPos.y);
+
+	if (Sons.count() != 0) {
+
+		p2List_item<UIelement*>*ite = Sons.start;
+
+		while (ite != nullptr) {
+
+			ite->data->move();
+			
+			ite = ite->next;
+		}
+	}
 }
 
 void UIelement::AddSon(UIelement*son)
@@ -101,17 +132,6 @@ void UIelement::AddSon(UIelement*son)
 p2Point<int> UIelement::getPosition()
 {
 	return p2Point<int>(Position);
-}
-
-bool UIelement::PositionOParent()
-{
-	bool ret = false;
-
-	if (Parent != nullptr) {
-		this->Position += Parent->getPosition();
-		ret = true;
-	}
-	return ret;
 }
 
 bool UIelement::isMouseRect(int MouseX, int MouseY)

@@ -20,7 +20,7 @@ public:
 	virtual void move();
 
 	virtual p2Point<int> getPosition();
-	virtual bool PositionOParent();
+
 	bool isMouseRect(int, int);
 	SDL_Rect GetBox()const{	return box;	}
 
@@ -34,11 +34,12 @@ protected:
 	p2Point<int> Position;
 	SDL_Rect box;
 	bool canMove;
-
 	UIelement* Parent=nullptr;
 	p2List<UIelement*> Sons;
 
 public:
+	bool isMoving = false;
+	bool canUpdate = false;
 	p2Point<int>LastPos = {0,0};
 	ElementsState elementState = sUnknown;
 };
