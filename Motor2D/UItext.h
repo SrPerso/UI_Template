@@ -8,14 +8,18 @@ public:
 	UIText(int, SDL_Rect,p2SString,p2Point<int>, bool);
 	~UIText();
 
-	p2SString getText()const;
+	const char* getText()const;
 
-	bool Update();
-	bool Draw();
+	bool update();
+	bool draw();
 	bool handle_intro();
-
+	void setText(const char*);
+	void SetNewSCoods(const int&, const int&);
+	void move();
+	SDL_Rect getrect();
 private:
-	p2SString text;
+	p2SString* text;
+	SDL_Texture* texture;
 };
 
 #endif // !_UI_IMAGE_

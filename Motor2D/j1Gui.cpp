@@ -49,28 +49,6 @@ bool j1Gui::PreUpdate()
 		iterator = iterator->next;
 	}
 
-
-	/*
-	p2List_item<UIelement*>*iterator;
-	p2List<UIelement*>* queue =  nullptr;
-
-	iterator = elementlist.start;	
-
-	while (iterator != nullptr){
-		if (iterator->data->IsTheGrandParent() != nullptr) {
-			queue->add(iterator->data->IsTheGrandParent());
-		}		 
-		iterator = iterator->next;
-	}//while	
-
-	iterator = queue->start;
-	
-	while (iterator != nullptr) {
-		ret = iterator->data->update();
-		ret = iterator->data->draw();
-		iterator = iterator->next;
-	}*/
-	
 	return ret;
 }
 

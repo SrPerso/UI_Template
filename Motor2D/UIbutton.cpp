@@ -94,8 +94,7 @@ void UIbutton::move()
 	int Mx, My, Rx, Ry;
 
 	App->input->GetMousePosition(Mx, My);
-
-
+	
 	Position.x += (Mx - LastPos.x);
 	Position.y += (My - LastPos.y);
 

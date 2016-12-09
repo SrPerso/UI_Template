@@ -35,6 +35,7 @@ protected:
 	SDL_Rect box;
 	bool canMove;
 	UIelement* Parent=nullptr;
+
 	p2List<UIelement*> Sons;
 
 public:

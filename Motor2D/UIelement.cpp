@@ -118,15 +118,15 @@ void UIelement::move()
 			ite = ite->next;
 		}
 	}
+	isMoving = true;
 }
 
 void UIelement::AddSon(UIelement*son)
-{	
-		Sons.add(son);		
+{
+	Sons.add(son);
 
-		if (son->Parent != this)
-			son->Parent = this;
-		
+	if (son->Parent != this)
+		son->Parent = this;
 }
 
 p2Point<int> UIelement::getPosition()
