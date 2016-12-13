@@ -94,6 +94,7 @@
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
     <ClCompile Include="UIbutton.cpp" />
     <ClCompile Include="UIelement.cpp" />
+    <ClCompile Include="UIScrollBar.cpp" />
     <ClCompile Include="UItext.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
     <ClInclude Include="UIbutton.h" />
     <ClInclude Include="UIelement.h" />
+    <ClInclude Include="UIScrollBar.h" />
     <ClInclude Include="UItext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

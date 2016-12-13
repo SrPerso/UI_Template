@@ -9,7 +9,6 @@ UIText::UIText(int id,SDL_Rect box, p2SString text, p2Point<int>Position, bool m
 {
 	this->text = new p2SString(text);
 	texture = App->font->Print(getText(), { (255),(160),(0),(0) }, App->font->default);
-
 }
 
 
@@ -87,7 +86,7 @@ bool UIText::update()
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
 
-	if (istyping == true) {
+	if (istyping == true&& TXTTYPER) {
 		texture = App->font->Print(App->input->GetText(), { (255),(160),(0),(0) }, App->font->default);
 	}
 		
