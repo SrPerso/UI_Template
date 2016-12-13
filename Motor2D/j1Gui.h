@@ -7,7 +7,7 @@
 #define CURSOR_WIDTH 2
 
 // TODO 1: Create your structure of classes
-enum typegui { UITXT, UIBUT, UIELEMENT, UIUNKNOWN };
+enum typegui { UITXT, UIBUT, UIELEMENT, UIUNKNOWN, UITXTTYPER};
 // ---------------------------------------------------
 class j1Gui : public j1Module
 {

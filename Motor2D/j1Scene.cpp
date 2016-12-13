@@ -44,16 +44,16 @@ bool j1Scene::Start()
 	UIelement* window = App->gui->CreateElement(		UIELEMENT,	SDL_Rect{ 0, 512, 484, 512 },					p2Point<int>{400, 50},	true);
 	UIelement* button = App->gui->CreateElement(		UIBUT,		SDL_Rect{ 0, 110, 230, 71 },					p2Point<int>{525,400},	false);
 	UIelement* textt = App->gui->CreateElement(			UITXT,		SDL_Rect{ 0, 0, 0, 0 },			"hELLO",		p2Point<int>{ 525,200 },true);
-	UIelement* Text_typer_back = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 485, 566, 350, 66 },					p2Point<int>{475, 300}, true);
-	UIelement* Text_typer = App->gui->CreateElement(	UITXT,		SDL_Rect{ 0, 0, 0, 0 },			"Type Here",	p2Point<int>{475, 300}, true);
+	UIelement* Text_typer_back = App->gui->CreateElement(UIBUT, SDL_Rect{ 485, 566, 350, 66 },					p2Point<int>{475, 300}, true);
+	UIelement* Text_typer = App->gui->CreateElement(	UITXTTYPER,		SDL_Rect{ 0, 0, 0, 0 },			"Type Here",	p2Point<int>{500, 325}, false);
 
 	
 
-	window->AddSon(button);
+	window->AddSon(button); 
 	window->AddSon(textt);
 	window->AddSon(Text_typer_back);
 	Text_typer_back->AddSon(Text_typer);
-
+	 
 	return true;
 }
 

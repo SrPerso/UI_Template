@@ -104,7 +104,7 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box,p2Point
 
 UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
 {
-	assert( elementType == UITXT);
+	assert(elementType == UITXT|| elementType == UITXTTYPER);
 
 	UIelement* created = nullptr;
 	
@@ -112,9 +112,13 @@ UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SStri
 	{
 	case UITXT:
 
-		created = new UIText(id, box, text, Position, move);
+		created = new UIText(id, box, text, Position, move, TEXT);
 		break;
-		
+	case UITXTTYPER:
+
+		created = new UIText(id, box, text, Position, move, TXTTYPER);
+		break;
+
 	}//switch
 
 	if (created != nullptr)

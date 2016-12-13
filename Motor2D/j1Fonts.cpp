@@ -6,8 +6,8 @@
 #include "j1Fonts.h"
 
 #include "SDL\include\SDL.h"
-#include "/Users/carlosps12/Documents/GitHub/UI_Template/Motor2D/SDL_ttf/include/SDL_ttf.h"
-#pragma comment( lib, "/Users/carlosps12/Documents/GitHub/UI_Template/Motor2D/SDL_ttf/libx86/SDL2_ttf.lib" )
+#include "SDL_ttf/include/SDL_ttf.h"
+#pragma comment( lib, "SDL_ttf/libx86/SDL2_ttf.lib" )
 
 j1Fonts::j1Fonts() : j1Module()
 {

@@ -4,7 +4,7 @@
 #include "p2List.h"
 #include "SDL\include\SDL.h"
 
-enum type { TEXT, IMAGE, ELEMENT, BUTTON, UNKNOWN };
+enum type { TEXT, IMAGE, ELEMENT, BUTTON, UNKNOWN , TXTTYPER };
 enum ElementsState { MouseIn, Mouseb1, Mouseb2, MouseOut, sUnknown };
 
 class UIelement {

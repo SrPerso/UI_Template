@@ -5,7 +5,7 @@
 #include "p2SString.h"
 class UIText :public UIelement {
 public:
-	UIText(int, SDL_Rect,p2SString,p2Point<int>, bool);
+	UIText(int, SDL_Rect,p2SString,p2Point<int>, bool, type);
 	~UIText();
 
 	const char* getText()const;
@@ -20,6 +20,8 @@ public:
 private:
 	p2SString* text;
 	SDL_Texture* texture;
+
+	bool istyping = false;
 };
 
 #endif // !_UI_IMAGE_

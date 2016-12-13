@@ -15,16 +15,29 @@ UIbutton::~UIbutton()
 
 bool UIbutton::draw()
 {
+	if (this->id == 1) {
+		assert(elementType == BUTTON);
 
-	if (elementState == MouseIn) {
-		SetNewSCoods(411, 166);
+		if (elementState == MouseIn) 
+			SetNewSCoods(411, 166);
+		
+		else if (elementState == Mouseb1 || elementState == Mouseb2) 
+			SetNewSCoods(642, 166);
+		
+		else if (elementState == MouseOut) 
+			SetNewSCoods(0, 110);
+		
 	}
-	else if (elementState == Mouseb1 || elementState == Mouseb2) {
-		SetNewSCoods(642,166);
+	else if (this->id == 3) {
+
+		assert(elementType == BUTTON);
+
+		if (elementState == Mouseb1)
+			SetNewSCoods(485, 633);
+		else if (elementState == MouseOut) 
+			SetNewSCoods(485, 566);
 	}
-	else if (elementState == MouseOut) {
-		SetNewSCoods(0, 110);
-	}
+
 
 	App->render->Blit(App->gui->GetAtlas(), Position.x, Position.y, &GetBox());
 
@@ -61,6 +74,7 @@ bool UIbutton::update()
 
 			if (canMove == true) {
 				move();
+
 			}
 		}
 		else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) {

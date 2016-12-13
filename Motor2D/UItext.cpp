@@ -5,7 +5,7 @@
 #include "j1Input.h"
 #include "j1Fonts.h"
 
-UIText::UIText(int id,SDL_Rect box, p2SString text, p2Point<int>Position, bool move):UIelement(id,TEXT,box,Position, move)
+UIText::UIText(int id,SDL_Rect box, p2SString text, p2Point<int>Position, bool move, type typeelemtn):UIelement(id, typeelemtn,box,Position, move)
 {
 	this->text = new p2SString(text);
 	texture = App->font->Print(getText(), { (255),(160),(0),(0) }, App->font->default);
@@ -24,6 +24,7 @@ const char* UIText::getText() const
 
 bool UIText::update()
 {
+
 	bool ret = true;
 
 	int w=0, h=0;
@@ -54,26 +55,42 @@ bool UIText::update()
 			elementState = MouseIn;
 
 			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) {
-				elementState = Mouseb1;
 
-				if (canMove == true) {
-					move();
+				elementState = Mouseb1;
+				if (TXTTYPER) {
+					App->input->StartTyping();
+					istyping = true;					
 				}
+				if (canMove == true)
+					move();
+				
 			}
-			else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) {
+
+			else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) 
 				elementState = Mouseb2;
-			}
-			//isMoving = false;
+			
 		}
 		else {
+
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)&& TXTTYPER) {
+				App->input->StopTyping();
+				istyping = false;
+			}
+
 			elementState = MouseOut;
 			isMoving = false;
 		}
 	}
+
 	canUpdate = false;
 
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
+
+	if (istyping == true) {
+		texture = App->font->Print(App->input->GetText(), { (255),(160),(0),(0) }, App->font->default);
+	}
+		
 
 	draw();
 
@@ -83,8 +100,7 @@ bool UIText::update()
 bool UIText::draw()
 {	
 
-	App->render->Blit(texture,Position.x,Position.y);
-	
+	App->render->Blit(texture, Position.x, Position.y);
 	return true;
 }
 
@@ -133,5 +149,17 @@ void UIText::move()
 	Position.y += (My - LastPos.y);
 
 	isMoving = true;
+
+	if (Sons.count() != 0) {
+
+		p2List_item<UIelement*>*ite = Sons.start;
+
+		while (ite != nullptr) {
+
+			ite->data->move();
+
+			ite = ite->next;
+		}
+	}
 
 }
