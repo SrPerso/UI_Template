@@ -13,7 +13,6 @@ UIText::UIText(int id,SDL_Rect box, p2SString text, p2Point<int>Position, bool m
 }
 
 
-
 UIText::~UIText()
 {
 }
@@ -26,6 +25,12 @@ const char* UIText::getText() const
 bool UIText::update()
 {
 	bool ret = true;
+
+	int w=0, h=0;
+
+	App->font->CalcSize(text->GetString(),w,h);
+
+	box = { Position.x,Position.y,w + Position.x,h + Position.y };
 
 	iPoint MousePos, MousePos2;
 
@@ -70,7 +75,7 @@ bool UIText::update()
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
 
-	this->draw();
+	draw();
 
 	return ret;
 }
@@ -117,8 +122,6 @@ SDL_Rect UIText::getrect()
 
 	return SDL_Rect(ret);
 }
-
-
 
 void UIText::move()
 {

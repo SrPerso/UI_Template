@@ -60,6 +60,12 @@ public:
 	{
 		return mouse_buttons[id - 1];
 	}
+	//
+
+	void StartTyping();
+	void StopTyping();
+	const char* GetText();
+
 
 	// Check if a certain window event happened
 	bool GetWindowEvent(int code);
@@ -76,6 +82,12 @@ private:
 	int			mouse_motion_y;
 	int			mouse_x;
 	int			mouse_y;
+
+private:
+	bool text_input;
+	p2SString lastText;
+	int cursor = 0;
+	int selection_len = 0;
 };
 
 #endif // __j1INPUT_H__

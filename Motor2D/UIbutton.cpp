@@ -100,4 +100,16 @@ void UIbutton::move()
 
 	isMoving = true;
 
+
+	if (Sons.count() != 0) {
+
+		p2List_item<UIelement*>*ite = Sons.start;
+
+		while (ite != nullptr) {
+
+			ite->data->move();
+
+			ite = ite->next;
+		}
+	}
 }

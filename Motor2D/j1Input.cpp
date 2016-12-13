@@ -4,7 +4,7 @@
 #include "j1Input.h"
 #include "j1Window.h"
 #include "SDL/include/SDL.h"
-
+#define _CRT_SECURE_NO_WARNINGS
 #define MAX_KEYS 300
 
 j1Input::j1Input() : j1Module()
@@ -106,6 +106,102 @@ bool j1Input::PreUpdate()
 					break;
 				}
 			break;
+			//case SDL_TEXTEDITING:
+
+			//	//lastText = event.edit.text;
+
+			//	//cursor_text_input = event.edit.start;
+
+			//	//selection_text_input = event.edit.length;
+
+			//	LOG("Edit event: %s cursor %d selection %d", event.edit.text, event.edit.start, event.edit.length);
+
+			//	break;
+
+			case SDL_KEYUP:
+
+				// Special case of micro controlling text input
+
+				if (text_input)
+
+				{
+
+					switch (event.key.keysym.sym)
+
+					{
+
+					case SDLK_BACKSPACE:
+
+						lastText.Cut(cursor - 1);
+
+						if (cursor > 0)
+
+							cursor--;
+
+						break;
+
+					case SDLK_DELETE:
+
+						if (cursor < lastText.Length())
+
+							lastText.Cut(cursor);
+
+						break;
+
+					case SDLK_KP_ENTER:
+
+					case SDLK_RETURN2:
+
+					case SDLK_RETURN:
+
+						selection_len = 1;
+
+						break;
+
+					case SDLK_LEFT:
+
+						if (cursor > 0)
+
+							cursor--;
+
+						break;
+
+					case SDLK_RIGHT:
+
+						if (cursor < lastText.Length())
+
+							cursor++;
+
+						break;
+
+					case SDLK_HOME:
+
+						cursor = 0;
+
+						break;
+
+					case SDLK_END:
+
+						cursor = lastText.Length();
+
+						break;
+
+					}
+				}
+				break;
+
+			case SDL_TEXTINPUT:
+
+				lastText.operator+=(event.text.text);
+
+				cursor += strlen(event.text.text);
+
+				LOG("Input event: %s", event.edit.text);
+
+				break;
+
+
+
 
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[event.button.button - 1] = KEY_DOWN;
@@ -155,4 +251,21 @@ void j1Input::GetMouseMotion(int& x, int& y)
 {
 	x = mouse_motion_x;
 	y = mouse_motion_y;
+}
+
+
+void j1Input::StartTyping() {
+	if (!text_input) {
+		text_input = true;
+		SDL_StartTextInput();
+	}
+}
+void j1Input::StopTyping() {
+	if (text_input) {
+		text_input = false;
+		SDL_StopTextInput();
+	}
+}
+const char* j1Input::GetText() {
+	return lastText.GetString();
 }

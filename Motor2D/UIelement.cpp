@@ -43,7 +43,7 @@ bool UIelement::update()
 			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) {
 				elementState = Mouseb1;
 
-				if (canMove == true) {
+				if (canMove == true) {				
 					move();
 				}
 
@@ -52,7 +52,7 @@ bool UIelement::update()
 				elementState = Mouseb2;
 
 			}
-			isMoving = false;
+			//isMoving = false;
 		}
 		else {
 			elementState = MouseOut;
@@ -63,10 +63,11 @@ bool UIelement::update()
 
 
 		LastPos.x = MousePos.x;
-		LastPos.y = MousePos.y;
-	
-		draw();
+		LastPos.y = MousePos.y;	
+		
+			draw();
 
+	
 
 		if (Sons.count() != 0) {
 			p2List_item<UIelement*>*ite = Sons.start;
@@ -118,6 +119,7 @@ void UIelement::move()
 			ite = ite->next;
 		}
 	}
+
 	isMoving = true;
 }
 
