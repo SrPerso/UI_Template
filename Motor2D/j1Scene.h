@@ -37,8 +37,8 @@ public:
 private:
 	SDL_Texture* background;
 	SDL_Texture* debug_tex;
-	GuiImage* banner;
-	GuiText* text;
+	
+	UIelement* window = NULL;
 };
 
 #endif // __j1SCENE_H__

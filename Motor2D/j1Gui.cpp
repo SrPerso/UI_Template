@@ -43,11 +43,53 @@ bool j1Gui::PreUpdate()
 	p2List_item<UIelement*>*iterator;
 	iterator = elementlist.start;
 
+	const UIelement* mouse_hover = FindMouseHover();
 	while (iterator != nullptr) {
 		if(iterator->data->IsTheGrandParent() != nullptr)
-		iterator->data->update();
+		iterator->data->update(mouse_hover, focus);
 		iterator = iterator->next;
 	}
+	p2List_item<UIelement*>* item;
+
+	// if TAB find the next item and give it the focus
+	if (App->input->GetKey(SDL_SCANCODE_TAB) == j1KeyState::KEY_DOWN)
+	{
+		int pos = elementlist.find((UIelement*)focus);
+		if (pos > 0)
+		{
+			focus = nullptr;
+			item = elementlist.At(pos);
+			if (item)
+				item = item->next;
+			for (item; item; item = item->next)
+				if (item->data->can_focus == true && item->data->active == true)
+				{
+					focus = item->data;
+					break;
+				}
+		}
+		if (focus == nullptr)
+		{
+			for (item = elementlist.start; item; item = item->next)
+				if (item->data->can_focus == true && item->data->active == true)
+				{
+					focus = item->data;
+					break;
+				}
+		}
+	}
+
+	// Now the iteration for input and update
+	for (item = elementlist.start; item; item = item->next)
+		if (item->data->interactive == true && item->data->active == true)
+			item->data->CheckInput(mouse_hover, focus);
+
+	for (item = elementlist.start; item; item = item->next)
+		if (item->data->active == true)
+		{
+			item->data->update(mouse_hover, focus);
+		}
+
 
 	return ret;
 }
@@ -55,6 +97,17 @@ bool j1Gui::PreUpdate()
 // Called after all Updates
 bool j1Gui::PostUpdate()
 {
+
+	p2List_item<UIelement*>* item;
+
+	for (item = elementlist.start; item; item = item->next)
+	{
+		if (item->data->active == true)
+		{
+			item->data->draw();
+		}
+	}
+	
 	return true;
 }
 
@@ -73,23 +126,66 @@ bool j1Gui::CleanUp()
 	return true;
 }
 
-UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box,p2Point<int>Position, bool move)
+
+// const getter for atlas
+SDL_Texture* j1Gui::GetAtlas() const
 {
-	assert(elementType == UIBUT || elementType== UIELEMENT);
+	return atlas;
+}
+
+const UIelement* j1Gui::FindMouseHover()const
+{
+	iPoint mouse;
+	App->input->GetMousePosition(mouse.x, mouse.y);
+
+	for (p2List_item<UIelement*>* item = elementlist.end; item; item = item->prev)
+	{
+		if (item->data->interactive == true)
+		{
+			if (item->data->GetScreenRect().Contains(mouse.x, mouse.y))
+				return item->data;
+		}
+	}
+
+	return nullptr;
+}
+
+//enable
+
+void j1Gui::EnableGui(UIelement* elem)
+{
+	if (elem != NULL)
+	{
+		if (elem->Sons.count() > 0)
+		{
+			for (p2List_item<UIelement*>* i = elem->Sons.end; i; i = i->prev)
+			{
+				EnableGui(i->data);
+			}
+		}
+		elem->active = true;
+	}
+}
+
+// class Gui ---------------------------------------------------
+
+UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Point<int>Position, bool move)
+{
+	assert(elementType == UIBUT || elementType == UIELEMENT);
 
 	UIelement* created = nullptr;
 
 	switch (elementType)
 	{
-		case UIBUT:
+	case UIBUT:
 
-			created = new UIbutton(id, box, Position, move);
-			break;
+		created = new UIbutton(id, box, Position, move);
+		break;
 
-		case UIELEMENT:
+	case UIELEMENT:
 
-			created = new UIelement(id, box, Position, move);
-			break;
+		created = new UIelement(id, box, Position, move);
+		break;
 
 	}//switch
 
@@ -104,10 +200,10 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box,p2Point
 
 UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
 {
-	assert(elementType == UITXT|| elementType == UITXTTYPER);
+	assert(elementType == UITXT || elementType == UITXTTYPER);
 
 	UIelement* created = nullptr;
-	
+
 	switch (elementType)
 	{
 	case UITXT:
@@ -127,14 +223,5 @@ UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SStri
 		id++;
 	}
 
-		return created;
+	return created;
 }//create element
-
-// const getter for atlas
-SDL_Texture* j1Gui::GetAtlas() const
-{
-	return atlas;
-}
-
-// class Gui ---------------------------------------------------
-

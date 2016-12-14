@@ -10,6 +10,10 @@
 #include "PugiXml\src\pugixml.hpp"
 
 class j1App;
+class UIelement;
+enum UIEvents;
+enum  ComandType;
+
 
 class j1Module
 {
@@ -66,6 +70,9 @@ public:
 	{
 		return true;
 	}
+
+	virtual void OnGui(UIelement* ui, UIEvents event)
+	{}
 
 	virtual bool Save(pugi::xml_node&) const
 	{

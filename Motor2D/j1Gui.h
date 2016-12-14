@@ -6,8 +6,27 @@
 #include "UItext.h"
 #define CURSOR_WIDTH 2
 
-// TODO 1: Create your structure of classes
+
 enum typegui { UITXT, UIBUT, UIELEMENT, UIUNKNOWN, UITXTTYPER};
+enum UIEvents
+{
+	listening_ends,
+	mouse_enters,
+	mouse_leaves,
+	mouse_lclick_down,
+	mouse_lclick_up,
+	mouse_rclick_down,
+	mouse_rclick_up,
+	gain_focus,
+	lost_focus,
+	input_changed,
+	input_submit,
+	value_changed,
+	return_down
+};
+
+
+
 // ---------------------------------------------------
 class j1Gui : public j1Module
 {
@@ -33,22 +52,26 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// TODO 2: Create the factory methods
+	const UIelement* FindMouseHover()const;
+
+public:
 	// Gui creation functions
 	UIelement* CreateElement(const typegui, SDL_Rect, p2Point<int>,bool);
 	UIelement* CreateElement(const typegui, SDL_Rect, p2SString, p2Point<int>, bool);
 
+	void EnableGui(UIelement* elem);
+
 	SDL_Texture* GetAtlas() const;
 
-	p2List<UIelement*> GetElementlist() {
-		return elementlist;
-	}
+	p2List<UIelement*> GetElementlist() {	return elementlist;	}
 	p2List<UIelement*> elementlist;
+
+
 
 private:
 
 	int id = 0;
-	
+	const UIelement *focus = nullptr;
 	SDL_Texture* atlas;
 
 	p2SString atlas_file_name;

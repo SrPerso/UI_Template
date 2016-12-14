@@ -39,15 +39,21 @@ bool j1Scene::Start()
 	// Load textures
 	background = App->tex->Load("textures/login_background.png");
 	
+	
+	//create Window ->id==0;
+	UIelement* window = App->gui->CreateElement(		UIELEMENT,	SDL_Rect{ 0, 512, 484, 512 },					p2Point<int>{400, 50},	true);
+	window->SetAtMiddle();
+	window->drag = true;
+	window->interactive = true;
+
 	// Create elements
 
-	UIelement* window = App->gui->CreateElement(		UIELEMENT,	SDL_Rect{ 0, 512, 484, 512 },					p2Point<int>{400, 50},	true);
+
+
 	UIelement* button = App->gui->CreateElement(		UIBUT,		SDL_Rect{ 0, 110, 230, 71 },					p2Point<int>{525,400},	false);
 	UIelement* textt = App->gui->CreateElement(			UITXT,		SDL_Rect{ 0, 0, 0, 0 },			"hELLO",		p2Point<int>{ 525,200 },true);
 	UIelement* Text_typer_back = App->gui->CreateElement(UIBUT, SDL_Rect{ 485, 566, 350, 66 },					p2Point<int>{475, 300}, true);
-	UIelement* Text_typer = App->gui->CreateElement(	UITXTTYPER,		SDL_Rect{ 0, 0, 0, 0 },			"Type Here",	p2Point<int>{500, 325}, false);
-
-	
+	UIelement* Text_typer = App->gui->CreateElement(	UITXTTYPER,		SDL_Rect{ 0, 0, 0, 0 },			"Type Here",	p2Point<int>{500, 325}, false);	
 
 	window->AddSon(button); 
 	window->AddSon(textt);
@@ -69,11 +75,8 @@ bool j1Scene::Update(float dt)
 {
 	//--------------------------UI-----------------------------------------------------------------
 
-
-	App->gui->PreUpdate();
-
-	//SDL_Color a{ ((0),(0),(0),(255)) };
-	//App->render->Blit(App->font->Print("Hello world", a), 200, 180);
+		if (window)
+			App->gui->EnableGui(window);
 
 	//-----------------------------------------------------------------------------------------------
 	
