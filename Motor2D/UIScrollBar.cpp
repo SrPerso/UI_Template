@@ -5,22 +5,115 @@
 #include "j1Input.h"
 
 
-UIscrollBar::UIscrollBar(int id, SDL_Rect box, p2Point<int>Position, bool move) :UIelement(id, SCROLL, box, Position, move)
+UIVscrollBar::UIVscrollBar(int id, SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
+	:UIelement(id, VSCROLL, box, Position, move), bar(0, bar_sect, Position,false), thumb(0, thumb_sect, Position, false), margins(margins), slider_value(value)
+{//iffffffffffffffffffffffff
+	this->bar.SetParent(this);
+	this->thumb.SetParent(this);
+
+	this->bar.SetLocalPos(offset.x, offset.y);
+	this->thumb.SetLocalPos(margins.x, margins.y);
+
+	min_y = margins.y;
+	max_y = bar.GetBox().h + offset.h - margins.y - thumb.GetBox().h;
+}
+
+UIVscrollBar::~UIVscrollBar()
 {
 
 }
 
-UIscrollBar::~UIscrollBar()
+float UIVscrollBar::GetValue() const
 {
+	iPoint p = thumb.GetLocalPos();
 
-	App->render->Blit(App->gui->GetAtlas(), Position.x, Position.y, &GetBox());
+	return float((p.y * slider_value) / max_y);
+}
 
+bool UIVscrollBar::draw(){
+
+	bar.draw();
+	thumb.draw();
 
 	return true;
 }
 
-bool UIscrollBar::update()
+bool UIVscrollBar::update(const UIelement* mouse_hover, const UIelement* focus)
 {
+
+	int requested_change = 0;
+
+
+	if (focus == this)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == j1KeyState::KEY_REPEAT)
+		{
+			requested_change = -1;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == j1KeyState::KEY_REPEAT)
+		{
+			requested_change = 1;
+		}
+
+	}
+
+	if (mouse_hover == this)
+	{
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == j1KeyState::KEY_REPEAT)
+		{
+			iPoint mouse;
+			App->input->GetMousePosition(mouse.x, mouse.y);
+			if (thumb.GetScreenRect().Contains(mouse.x, mouse.y))
+			{
+				iPoint motion;
+				App->input->GetMouseMotion(motion.x, motion.y);
+				requested_change = motion.y;
+			}
+			else
+			{
+				iPoint pos = thumb.GetScreenPos();
+				if (mouse.y < pos.y)
+					requested_change = -1;
+				else
+					requested_change = 1;
+			}
+		}
+	}
+
+	if (requested_change != 0)
+	{
+		iPoint p = thumb.getPosition();
+		int y = MIN(max_y, p.y + requested_change);
+		if (y < min_y)
+			y = min_y;
+
+		if (y != p.y)
+		{
+			if (listener != NULL)
+				listener->OnGui(this, value_changed);
+			thumb.SetLocalPos(p.x, y);
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	bool ret = false;
 
 	iPoint MousePos, MousePos2;
@@ -68,7 +161,8 @@ bool UIscrollBar::update()
 
 	return ret;
 }
-void UIscrollBar::move()
+  
+void UIVscrollBar::move()
 {
 	int Mx, My, Rx, Ry;
 
