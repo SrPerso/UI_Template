@@ -90,7 +90,7 @@ bool UIVscrollBar::update(const UIelement* mouse_hover, const UIelement* focus)
 		if (y != p.y)
 		{
 			if (listener != NULL)
-				listener->OnGui(this, value_changed);
+				listener->behaviour(this, value_changed);
 			thumb.SetLocalPos(p.x, y);
 		}
 	}

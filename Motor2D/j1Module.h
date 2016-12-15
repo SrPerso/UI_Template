@@ -71,7 +71,7 @@ public:
 		return true;
 	}
 
-	virtual void OnGui(UIelement* ui, UIEvents event)
+	virtual void behaviour(UIelement* ui, UIEvents event)
 	{}
 
 	virtual bool Save(pugi::xml_node&) const

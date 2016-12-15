@@ -2,6 +2,8 @@
 #define __j1INPUT_H__
 
 #include "j1Module.h"
+#include "SDL/include/SDL_scancode.h"
+#include "SDL/include/SDL_mouse.h"
 
 //#define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
@@ -62,9 +64,9 @@ public:
 	}
 	//
 
-	void StartTyping();
+	void StartTyping(SDL_Rect* rect, p2SString input);
 	void StopTyping();
-	const char* GetText();
+	const char* GetText(int& cursor, int& selection)const;
 
 
 	// Check if a certain window event happened
@@ -76,12 +78,12 @@ public:
 
 private:
 	bool		windowEvents[WE_COUNT];
-	j1KeyState*	keyboard;
+	j1KeyState*	keyboard=nullptr;
 	j1KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	int			mouse_motion_x;
-	int			mouse_motion_y;
-	int			mouse_x;
-	int			mouse_y;
+	int			mouse_motion_x = 0;
+	int			mouse_motion_y = 0;
+	int			mouse_x = 0;
+	int			mouse_y = 0;
 
 private:
 	bool text_input;

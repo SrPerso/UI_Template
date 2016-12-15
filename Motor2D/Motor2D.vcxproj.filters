@@ -64,6 +64,9 @@
     <ClCompile Include="UIScrollBar.cpp">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClCompile>
+    <ClCompile Include="UIMouse.cpp">
+      <Filter>Desenvolupament  ========\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -145,6 +148,9 @@
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
     <ClInclude Include="UIScrollBar.h">
+      <Filter>Desenvolupament  ========\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMouse.h">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
   </ItemGroup>

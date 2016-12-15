@@ -21,7 +21,7 @@ const char* UIText::getText() const
 	return text->GetString();
 }
 
-bool UIText::update()
+bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 {
 
 	bool ret = true;
@@ -57,7 +57,7 @@ bool UIText::update()
 
 				elementState = Mouseb1;
 				if (TXTTYPER) {
-					App->input->StartTyping();
+				//	App->input->StartTyping();
 					istyping = true;					
 				}
 				if (canMove == true)
@@ -87,7 +87,7 @@ bool UIText::update()
 	LastPos.y = MousePos.y;
 
 	if (istyping == true&& TXTTYPER) {
-		texture = App->font->Print(App->input->GetText(), { (255),(160),(0),(0) }, App->font->default);
+	//	texture = App->font->Print(App->input->GetText(), { (255),(160),(0),(0) }, App->font->default);
 	}
 		
 

@@ -5,12 +5,12 @@
 #include "p2SString.h"
 class UIText :public UIelement {
 public:
-	UIText(int, SDL_Rect,p2SString,p2Point<int>, bool, type);
+	UIText(int id,const SDL_Rect section,p2SString,p2Point<int>, bool, type);
 	~UIText();
 
 	const char* getText()const;
 
-	bool update();
+	bool update(const UIelement* mouse_hover, const UIelement* focus);
 	bool draw();
 	bool handle_intro();
 	void setText(const char*);

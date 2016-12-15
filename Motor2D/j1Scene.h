@@ -34,11 +34,18 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void behaviour(UIelement* ui, UIEvents event);
+
 private:
 	SDL_Texture* background;
 	SDL_Texture* debug_tex;
-	
+
+
+	//ui---------------------------
+	UIelement* button;
 	UIelement* window = NULL;
+	UIelement* textt;
+	//ui---------------------------
 };
 
 #endif // __j1SCENE_H__

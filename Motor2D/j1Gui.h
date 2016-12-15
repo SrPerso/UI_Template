@@ -7,7 +7,16 @@
 #define CURSOR_WIDTH 2
 
 
-enum typegui { UITXT, UIBUT, UIELEMENT, UIUNKNOWN, UITXTTYPER};
+enum typegui { 
+	UITXT,
+	UIBUT, 
+	UIELEMENT,
+	UITXTTYPER,
+	UICURSOR,
+	UIVSCRO,
+	UIHSCRO,
+	UIUNKNOWN,
+};
 enum UIEvents
 {
 	listening_ends,
@@ -22,6 +31,8 @@ enum UIEvents
 	input_changed,
 	input_submit,
 	value_changed,
+	mouse_lclick_repeat,
+	mouse_rclick_repeat,
 	return_down
 };
 
@@ -60,23 +71,18 @@ public:
 	UIelement* CreateElement(const typegui, SDL_Rect, p2SString, p2Point<int>, bool);
 
 	void EnableGui(UIelement* elem);
-
+	bool DeleteGui(UIelement* elem);
 	SDL_Texture* GetAtlas() const;
-
 	p2List<UIelement*> GetElementlist() {	return elementlist;	}
-	p2List<UIelement*> elementlist;
-
-
+	
 
 private:
 
 	int id = 0;
+	p2List<UIelement*> elementlist;
 	const UIelement *focus = nullptr;
-	SDL_Texture* atlas;
-
+	SDL_Texture* atlas=nullptr;
 	p2SString atlas_file_name;
-	//p2SString wow_file_font;
-	
 
 };
 

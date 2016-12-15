@@ -254,18 +254,25 @@ void j1Input::GetMouseMotion(int& x, int& y)
 }
 
 
-void j1Input::StartTyping() {
-	if (!text_input) {
-		text_input = true;
-		SDL_StartTextInput();
-	}
+void j1Input::StartTyping(SDL_Rect* rect, p2SString input) {
+
+	text_input = true;
+	SDL_StartTextInput();
+	lastText = input;
+	cursor = lastText.Length();
+
+	if (rect != NULL)
+		SDL_SetTextInputRect(rect);
 }
+
 void j1Input::StopTyping() {
-	if (text_input) {
-		text_input = false;
-		SDL_StopTextInput();
-	}
+	SDL_StopTextInput();
+	text_input = false;
 }
-const char* j1Input::GetText() {
+
+const char* j1Input::GetText(int& cursor, int& selection)const {
+	cursor = this->cursor;
+	selection = this->selection_len;
+
 	return lastText.GetString();
 }

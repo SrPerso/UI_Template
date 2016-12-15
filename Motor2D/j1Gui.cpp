@@ -39,16 +39,25 @@ bool j1Gui::Start()
 // Update all guis
 bool j1Gui::PreUpdate()
 {
-	bool ret=true;
+	/*bool ret=true;
 	p2List_item<UIelement*>*iterator;
 	iterator = elementlist.start;
 
 	const UIelement* mouse_hover = FindMouseHover();
+	
 	while (iterator != nullptr) {
 		if(iterator->data->IsTheGrandParent() != nullptr)
 		iterator->data->update(mouse_hover, focus);
 		iterator = iterator->next;
-	}
+	}*/
+
+	const UIelement* mouse_hover = FindMouseHover();
+	if (mouse_hover &&
+		mouse_hover->can_focus == true &&
+		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == j1KeyState::KEY_DOWN)
+		focus = mouse_hover;
+
+
 	p2List_item<UIelement*>* item;
 
 	// if TAB find the next item and give it the focus
@@ -91,7 +100,7 @@ bool j1Gui::PreUpdate()
 		}
 
 
-	return ret;
+	return true;
 }
 
 // Called after all Updates
@@ -126,7 +135,6 @@ bool j1Gui::CleanUp()
 	return true;
 }
 
-
 // const getter for atlas
 SDL_Texture* j1Gui::GetAtlas() const
 {
@@ -149,7 +157,6 @@ const UIelement* j1Gui::FindMouseHover()const
 
 	return nullptr;
 }
-
 //enable
 
 void j1Gui::EnableGui(UIelement* elem)
@@ -167,21 +174,41 @@ void j1Gui::EnableGui(UIelement* elem)
 	}
 }
 
+bool j1Gui::DeleteGui(UIelement * elem)
+{
+	bool ret = false;
+	if (elem != NULL)
+	{
+		if (elem->Sons.count() > 0)
+		{
+			for (p2List_item<UIelement*>* i = elem->Sons.end; i; i = i->prev)
+			{
+				DeleteGui(i->data);
+			}
+		}
+		int pos = elementlist.find(elem);
+
+		p2List_item<UIelement*>* tmp = elementlist.At(pos);
+
+		RELEASE(tmp->data);
+
+		if (elementlist.del(tmp))
+			ret = true;
+	}
+
+	return ret;
+}
+
 // class Gui ---------------------------------------------------
 
 UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Point<int>Position, bool move)
 {
-	assert(elementType == UIBUT || elementType == UIELEMENT);
+	assert(elementType == UIELEMENT);
 
 	UIelement* created = nullptr;
 
 	switch (elementType)
 	{
-	case UIBUT:
-
-		created = new UIbutton(id, box, Position, move);
-		break;
-
 	case UIELEMENT:
 
 		created = new UIelement(id, box, Position, move);
