@@ -80,21 +80,21 @@ bool UIelement::update(const UIelement* mouse_hover, const UIelement* focus)
 bool UIelement::draw()
 {
 
-
+	bool ret= false;
 	if (elementType == ELEMENT) {
-
+		ret = true;
 		if (Parent && Parent->cut_childs)
 		{
 			SDL_Rect rec = Parent->GetScreenRect();
 			App->render->SetViewPort(rec);
 		}
 
-		App->render->Blit(textu, Position.x, Position.y, (SDL_Rect*)&box, 0.0f);
+		App->render->Blit(App->gui->GetAtlas(), Position.x, Position.y, (SDL_Rect*)&box, 0.0f);
 		if (Parent && Parent->cut_childs)
 			App->render->ResetViewPort();
 	}
 
-	return true;
+	return ret;
 }
 
 bool UIelement::handle_intro()
@@ -220,26 +220,25 @@ void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN){
 			App->scene->behaviour(this, mouse_lclick_down);
 			isClicked = true;
-	}
+		}
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
 			App->scene->behaviour(this, mouse_lclick_up);
 			isClicked = true;
-	}
+		}
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN){
 			App->scene->behaviour(this, mouse_rclick_down);
 			isClicked = true;
-	}
+		}
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) {
 			App->scene->behaviour(this, mouse_lclick_up);
 			isClicked = true;
 		}
-		
-
 
 
 		if (canMove == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			App->scene->behaviour(this, mouse_lclick_repeat);
-		if (canMove == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+
+		if (canMove == true && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 			App->scene->behaviour(this, mouse_rclick_repeat);
 
 		else if(isClicked != true)
@@ -247,13 +246,28 @@ void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)
 		
 	}
 
+
+
 	else if(isMouseRect(MousePos.x, MousePos.y) == false&&isClicked==false)
 		App->scene->behaviour(this, lost_focus);
 
+	//keys ARROWWWWWWWW
+	if (App->input->GetKey(	SDLK_DOWN) == KEY_DOWN)
+		App->scene->behaviour(this, pushing_down);
 
-	if (have_focus != (focus == this))
-	{
+	if (App->input->GetKey(SDLK_UP) == KEY_DOWN)
+		App->scene->behaviour(this, pushing_up);
 
+	if (App->input->GetKey(SDLK_LEFT) == KEY_DOWN)
+		App->scene->behaviour(this, pushing_left);
+
+	if (App->input->GetKey(SDLK_RIGHT) == KEY_DOWN)
+		App->scene->behaviour(this, pushing_right);
+
+
+
+	if (have_focus != (focus == this)){
+	
 			if (focus == this)
 				App->scene->behaviour(this,gain_focus);
 			else

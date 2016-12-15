@@ -6,6 +6,7 @@
 struct SDL_Texture;
 class UIlabel;
 class UItext;
+class UIVscrollBar;
 class j1Scene : public j1Module
 {
 public:
@@ -48,7 +49,7 @@ private:
 	UIelement* Text_typer_back = NULL;
 	UIlabel* text = NULL;
 	UIlabel* title = NULL;
-
+	UIVscrollBar* Vscroll = NULL;
 	//ui---------------------------
 };
 

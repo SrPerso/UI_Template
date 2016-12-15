@@ -142,7 +142,7 @@ const UIelement* j1Gui::FindMouseHover()const
 	{
 		if (item->data->interactive == true)
 		{
-			if (item->data->GetScreenRect().Contains(mouse.x, mouse.y))
+			if (item->data->GetBox().Contains(mouse.x, mouse.y))
 				return item->data;
 		}
 	}
@@ -289,3 +289,14 @@ UIelement* j1Gui::Createtyper(const typegui elementType, SDL_Rect box, p2SString
 
 	return created;
 }//create element
+
+
+UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
+{
+	UIVscrollBar* ret = NULL;
+
+	ret = new UIVscrollBar(box,Position,move, bar_sect, thumb_sect, offset, margins,value);
+	elementlist.add(ret);
+
+	return ret;
+}

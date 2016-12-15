@@ -4,6 +4,7 @@
 #include "j1Module.h"
 #include "UIelement.h"
 #include "UItext.h"
+#include "UIScrollBar.h"
 #include "UItext2.h"
 #define CURSOR_WIDTH 2
 
@@ -34,7 +35,11 @@ enum UIEvents
 	value_changed,
 	mouse_lclick_repeat,
 	mouse_rclick_repeat,
-	return_down
+	return_down,
+	pushing_up,
+	pushing_down,
+	pushing_right,
+	pushing_left,
 };
 
 
@@ -71,7 +76,7 @@ public:
 	UIelement* CreateElement(const typegui, SDL_Rect, p2Point<int>,bool);
 	UIelement* CreateElement(const typegui, SDL_Rect, p2SString,uint, p2Point<int>, bool, bool,int);
 	UIlabel* CreateLabel(const char* text, p2Point<int>);
-
+	UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value);
 	UIelement* Createtyper(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move);
 
 	void EnableGui(UIelement* elem);

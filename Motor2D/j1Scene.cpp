@@ -10,6 +10,7 @@
 #include "j1PathFinding.h"
 #include "j1Gui.h"
 #include "UIelement.h"
+#include "UIScrollBar.h"
 #include "j1Scene.h"
 #include "j1FileSystem.h"
 
@@ -69,26 +70,20 @@ bool j1Scene::Start()
 	Text_typer_back->can_focus = true;
 	window->AddSon(Text_typer_back);//tree
 
-
+	//typer  -------------------------------------------
 	typer  = App->gui->Createtyper(UITXTTYPER, SDL_Rect{ 0, 0, 0, 0 }, "Type Here..", p2Point<int>{500, 400}, false);
 	Text_typer_back->AddSon(typer);//tree
 
-
-
-
-
-
-
-
-
-
+	//vertical scroll -.----------------------------------
+	Vscroll = App->gui->CreateVScroll(SDL_Rect{ 0, 512, 484, 512 }, p2Point<int>{500, 500}, false, SDL_Rect{ 986, 874, 12, 150 }, SDL_Rect{ 950, 806, 9, 47 }, {50, 50, 0, 95 }, { 51, 58 }, 5);
+	
 
 	//------------------------------------------
 	//cursor  ------------------------------------------
-	curs = App->gui->CreateElement(UICURSOR, SDL_Rect{ 994,728, 25, 23 }, p2Point<int>{ 0, 0 },true);
-	curs->SetListener(this);
-	curs->interactive = true;
-	curs->can_focus = false;
+	//curs = App->gui->CreateElement(UICURSOR, SDL_Rect{ 994,728, 25, 23 }, p2Point<int>{ 0, 0 },true);
+	//curs->SetListener(this);
+	//curs->interactive = true;
+	//curs->can_focus = false;
 	//-----------------------------------------------------------------------------------------------
 
 	return true;
@@ -143,15 +138,18 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 			button->SetBox(SDL_Rect{ 0,113,229,69 });
 
 			break;
-		//case mouse_lclick_repeat:
-		//	//ui->move();
-		//	break;
+
 		case mouse_leaves:
 		case lost_focus:
 			button->SetBox(SDL_Rect{ 642, 169, 229, 69 });
 			break;
 
 		case mouse_lclick_down:
+			if(button->Parent->canMove != false)
+				button->Parent->canMove = false; 
+			else
+				button->Parent->canMove = true;
+
 			button->SetBox(SDL_Rect{ 411, 169, 229, 69 });
 			break;
 
@@ -168,33 +166,24 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 			break;
 		}
 	}
-	/*
-	if (ui == sliderH)
+
+	if (ui == &Vscroll->thumb)
 	{
 		switch (event)
 		{
+		case pushing_up:
+			Vscroll->requested_change = -1;
+			break;
+		case pushing_down:
+			Vscroll->requested_change = +1;
+			break;
 		case value_changed:
 			char n[20];
-			sprintf_s(n, "Value: %0.2f", sliderH->GetValue());
+			sprintf_s(n, "Value: %0.2f", Vscroll->GetValue());
 			title->SetText(n);
 			break;
 		}
-	}*/
-	/*
-	if (ui == image)
-	{
-		switch (event)
-		{
-		case UIEvents::mouse_enters:
-			help->active = true;
-			break;
-		case UIEvents::mouse_leaves:
-			help->active = false;
-			break;
-		}
 	}
-	*/
-
 
 	if (ui == curs)
 	{

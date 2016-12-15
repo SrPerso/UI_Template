@@ -87,6 +87,7 @@
     <ClCompile Include="j1PerfTimer.cpp" />
     <ClCompile Include="j1Scene.cpp" />
     <ClCompile Include="j1Timer.cpp" />
+    <ClCompile Include="UILoadBar.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="j1Render.cpp" />
     <ClCompile Include="j1Textures.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
     <ClInclude Include="UIelement.h" />
+    <ClInclude Include="UILoadBar.h" />
     <ClInclude Include="UIMouse.h" />
     <ClInclude Include="UIScrollBar.h" />
     <ClInclude Include="UItext.h" />
