@@ -92,11 +92,11 @@
     <ClCompile Include="j1Textures.cpp" />
     <ClCompile Include="j1Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
-    <ClCompile Include="UIbutton.cpp" />
     <ClCompile Include="UIelement.cpp" />
     <ClCompile Include="UIMouse.cpp" />
     <ClCompile Include="UIScrollBar.cpp" />
     <ClCompile Include="UItext.cpp" />
+    <ClCompile Include="UItext2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1FileSystem.h" />
@@ -122,11 +122,11 @@
     <ClInclude Include="p2SString.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
-    <ClInclude Include="UIbutton.h" />
     <ClInclude Include="UIelement.h" />
     <ClInclude Include="UIMouse.h" />
     <ClInclude Include="UIScrollBar.h" />
     <ClInclude Include="UItext.h" />
+    <ClInclude Include="UItext2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,9 +5,12 @@
 #include "j1Textures.h"
 #include "j1Fonts.h"
 #include "j1Input.h"
+#include "UItext.h"
 #include "j1Gui.h"
-#include "UIbutton.h"
+#include "j1Scene.h"
 #include "UIelement.h"
+#include "UIMouse.h"
+#include "UItext2.h"
 
 j1Gui::j1Gui() : j1Module()
 {
@@ -39,17 +42,6 @@ bool j1Gui::Start()
 // Update all guis
 bool j1Gui::PreUpdate()
 {
-	/*bool ret=true;
-	p2List_item<UIelement*>*iterator;
-	iterator = elementlist.start;
-
-	const UIelement* mouse_hover = FindMouseHover();
-	
-	while (iterator != nullptr) {
-		if(iterator->data->IsTheGrandParent() != nullptr)
-		iterator->data->update(mouse_hover, focus);
-		iterator = iterator->next;
-	}*/
 
 	const UIelement* mouse_hover = FindMouseHover();
 	if (mouse_hover &&
@@ -99,7 +91,6 @@ bool j1Gui::PreUpdate()
 			item->data->update(mouse_hover, focus);
 		}
 
-
 	return true;
 }
 
@@ -109,14 +100,15 @@ bool j1Gui::PostUpdate()
 
 	p2List_item<UIelement*>* item;
 
-	for (item = elementlist.start; item; item = item->next)
+	for (item = elementlist.start; item!=nullptr; item = item->next)
 	{
-		if (item->data->active == true)
-		{
+		if (item->data->active == true)		{
 			item->data->draw();
 		}
 	}
-	
+
+
+
 	return true;
 }
 
@@ -201,9 +193,10 @@ bool j1Gui::DeleteGui(UIelement * elem)
 
 // class Gui ---------------------------------------------------
 
+
 UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Point<int>Position, bool move)
 {
-	assert(elementType == UIELEMENT);
+	assert(elementType == UIELEMENT|| elementType == UICURSOR);
 
 	UIelement* created = nullptr;
 
@@ -211,7 +204,12 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Poin
 	{
 	case UIELEMENT:
 
-		created = new UIelement(id, box, Position, move);
+		created = new UIelement(box, Position, move);
+		break;
+
+	case UICURSOR:
+
+		created = new UICursor(box,Position.x,Position.y);
 		break;
 
 	}//switch
@@ -219,13 +217,13 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Poin
 	if (created != nullptr)
 	{
 		elementlist.add(created);
-		id++;
 	}
 
 	return created;
 }
 
-UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
+UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect section, p2SString defaultText, uint width, p2Point<int>Position,
+	bool move, bool password, int max_quantity)
 {
 	assert(elementType == UITXT || elementType == UITXTTYPER);
 
@@ -235,11 +233,12 @@ UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SStri
 	{
 	case UITXT:
 
-		created = new UIText(id, box, text, Position, move, TEXT);
+		created = new UItext(section, defaultText,Position, move);
 		break;
+
 	case UITXTTYPER:
 
-		created = new UIText(id, box, text, Position, move, TXTTYPER);
+		created = new UIText(section, defaultText, width, Position, move, TXTTYPER, password, max_quantity);
 		break;
 
 	}//switch
@@ -247,7 +246,45 @@ UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2SStri
 	if (created != nullptr)
 	{
 		elementlist.add(created);
-		id++;
+	}
+
+	return created;
+}
+
+UIlabel * j1Gui::CreateLabel(const char * text, p2Point<int>pos)
+{
+	UIlabel*created = NULL;
+
+		if (text != NULL)
+		{
+			created = new UIlabel(text, pos);
+			elementlist.add(created);
+		}
+
+	return created;
+}
+
+//create element
+UIelement* j1Gui::Createtyper(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
+{
+	//assert(elementType == UITXT || elementType == UITXTTYPER);
+
+	UIelement* created = nullptr;
+
+	switch (elementType)
+	{
+
+	case UITXTTYPER:
+
+		created = new UItext(box, text, Position, move);
+		break;
+
+	}//switch
+
+	if (created != nullptr)
+	{
+		elementlist.add(created);
+
 	}
 
 	return created;

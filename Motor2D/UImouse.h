@@ -4,16 +4,16 @@
 #include "p2Point.h"
 #include "UIelement.h"
 
-class GuiMCursor :public UIelement
+class UICursor :public UIelement
 {
 public:
-	GuiMCursor( SDL_Texture* texture, int margin_x, int margin_y);
-	GuiMCursor( SDL_Texture* texture, const SDL_Rect& section, int margin_x, int margin_y);
-	~GuiMCursor();
+	UICursor( int margin_x, int margin_y);
+	UICursor( const SDL_Rect& section, int margin_x, int margin_y);
+	~UICursor();
 
 	void SetSection(const SDL_Rect& section);
 	SDL_Rect GetSection()const;
-	void Draw() const;
+	bool draw();
 	void Update(const UIelement* mouse_hover, const UIelement* focus);
 	SDL_Texture* GetTexture()const;
 

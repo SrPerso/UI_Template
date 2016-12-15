@@ -8,7 +8,7 @@
 
 class UIVscrollBar :public UIelement {
 public:
-	UIVscrollBar(int, SDL_Rect, p2Point<int>, bool, const SDL_Rect&, const SDL_Rect&, const SDL_Rect&,iPoint,float);
+	UIVscrollBar(SDL_Rect, p2Point<int>, bool, const SDL_Rect&, const SDL_Rect&, const SDL_Rect&,iPoint,float);
 	~UIVscrollBar();
 
 	float GetValue() const; 

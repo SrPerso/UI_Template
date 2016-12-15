@@ -200,9 +200,6 @@ bool j1Input::PreUpdate()
 
 				break;
 
-
-
-
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[event.button.button - 1] = KEY_DOWN;
 				//LOG("Mouse button %d down", event.button.button-1);
@@ -274,5 +271,28 @@ const char* j1Input::GetText(int& cursor, int& selection)const {
 	cursor = this->cursor;
 	selection = this->selection_len;
 
+	return lastText.GetString();
+}
+
+void j1Input::TextInputTooLong()
+{
+	lastText = last_textinput;
+	cursor = last_cursor;
+}
+
+
+void j1Input::StartTyping2() {
+	if (!text_input) {
+		text_input = true;
+		SDL_StartTextInput();
+	}
+}
+void j1Input::StopTyping2() {
+	if (text_input) {
+		text_input = false;
+		SDL_StopTextInput();
+	}
+}
+const char* j1Input::GetText2() {
 	return lastText.GetString();
 }

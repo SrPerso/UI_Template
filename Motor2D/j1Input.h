@@ -67,11 +67,16 @@ public:
 	void StartTyping(SDL_Rect* rect, p2SString input);
 	void StopTyping();
 	const char* GetText(int& cursor, int& selection)const;
-
-
+	void TextInputTooLong();
+	
 	// Check if a certain window event happened
-	bool GetWindowEvent(int code);
+	//bool GetWindowEvent(int code);
 
+
+	void StartTyping2();
+	void StopTyping2();
+
+	const char* GetText2();
 	// Get mouse / axis position
 	void GetMousePosition(int &x, int &y);
 	void GetMouseMotion(int& x, int& y);
@@ -86,6 +91,8 @@ private:
 	int			mouse_y = 0;
 
 private:
+	int			last_cursor;
+	p2SString	last_textinput;
 	bool text_input;
 	p2SString lastText;
 	int cursor = 0;

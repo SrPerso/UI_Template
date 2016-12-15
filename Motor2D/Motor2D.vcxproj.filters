@@ -58,13 +58,13 @@
     <ClCompile Include="UIelement.cpp">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClCompile>
-    <ClCompile Include="UIbutton.cpp">
-      <Filter>Desenvolupament  ========\UI</Filter>
-    </ClCompile>
     <ClCompile Include="UIScrollBar.cpp">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIMouse.cpp">
+      <Filter>Desenvolupament  ========\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UItext2.cpp">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -144,13 +144,13 @@
     <ClInclude Include="UIelement.h">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
-    <ClInclude Include="UIbutton.h">
-      <Filter>Desenvolupament  ========\UI</Filter>
-    </ClInclude>
     <ClInclude Include="UIScrollBar.h">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
     <ClInclude Include="UIMouse.h">
+      <Filter>Desenvolupament  ========\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UItext2.h">
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
   </ItemGroup>

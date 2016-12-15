@@ -4,6 +4,7 @@
 #include "j1Module.h"
 #include "UIelement.h"
 #include "UItext.h"
+#include "UItext2.h"
 #define CURSOR_WIDTH 2
 
 
@@ -68,7 +69,10 @@ public:
 public:
 	// Gui creation functions
 	UIelement* CreateElement(const typegui, SDL_Rect, p2Point<int>,bool);
-	UIelement* CreateElement(const typegui, SDL_Rect, p2SString, p2Point<int>, bool);
+	UIelement* CreateElement(const typegui, SDL_Rect, p2SString,uint, p2Point<int>, bool, bool,int);
+	UIlabel* CreateLabel(const char* text, p2Point<int>);
+
+	UIelement* Createtyper(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move);
 
 	void EnableGui(UIelement* elem);
 	bool DeleteGui(UIelement* elem);
@@ -78,7 +82,6 @@ public:
 
 private:
 
-	int id = 0;
 	p2List<UIelement*> elementlist;
 	const UIelement *focus = nullptr;
 	SDL_Texture* atlas=nullptr;

@@ -4,9 +4,8 @@
 #include "j1Module.h"
 
 struct SDL_Texture;
-class GuiImage;
-class GuiText;
-
+class UIlabel;
+class UItext;
 class j1Scene : public j1Module
 {
 public:
@@ -36,15 +35,20 @@ public:
 
 	void behaviour(UIelement* ui, UIEvents event);
 
+	UIelement* typer = NULL;
 private:
 	SDL_Texture* background;
 	SDL_Texture* debug_tex;
-
-
 	//ui---------------------------
-	UIelement* button;
+	UIelement* button = NULL;
 	UIelement* window = NULL;
-	UIelement* textt;
+	UIelement* Text_typer = NULL;
+	UIelement* textt = NULL;
+	UIelement* curs = NULL;
+	UIelement* Text_typer_back = NULL;
+	UIlabel* text = NULL;
+	UIlabel* title = NULL;
+
 	//ui---------------------------
 };
 

@@ -354,6 +354,35 @@ public:
 		else
 			return 0;
 	}
+	//insert
+	p2SString& Insert(unsigned int position, const char* text)
+	{
+		if (position <= size && text != NULL)
+		{
+			int len = strlen(text);
+			int old_len = Length();
+			char* old_str = str;
+			Alloc(len + old_len + 1);
+
+			memcpy(str, old_str, position);
+			memcpy(&str[position], text, len);
+			memcpy(&str[position + len], &old_str[position], old_len - position + 1);
+			delete[] old_str;
+		}
+		return(*this);
+	}
+	//swap
+	void Reserve(uint new_capacity)
+	{
+		if (new_capacity > size)
+		{
+			uint len = Length();
+			char* tmp = str;
+			Alloc(new_capacity);
+			memcpy(str, tmp, len + 1);
+			delete[] tmp;
+		}
+	}
 
 private:
 

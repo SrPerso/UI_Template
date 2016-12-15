@@ -5,9 +5,9 @@
 #include "j1Input.h"
 
 
-UIVscrollBar::UIVscrollBar(int id, SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
-	:UIelement(id, VSCROLL, box, Position, move), bar(0, bar_sect, Position,false), thumb(0, thumb_sect, Position, false), margins(margins), slider_value(value)
-{//iffffffffffffffffffffffff
+UIVscrollBar::UIVscrollBar(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
+	:UIelement( VSCROLL, box, Position, move), bar(bar_sect, Position,false), thumb( thumb_sect, Position, false), margins(margins), slider_value(value)
+{
 	this->bar.SetParent(this);
 	this->thumb.SetParent(this);
 

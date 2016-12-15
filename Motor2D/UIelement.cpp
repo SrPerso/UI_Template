@@ -7,12 +7,15 @@
 #include "j1Scene.h"
 
 #include <stdio.h>
-UIelement::UIelement(int id, SDL_Rect box, p2Point<int>Position,bool canMove)
-	:elementType(ELEMENT), box(box), id(id), Position(Position),canMove(canMove)
+UIelement::UIelement( SDL_Rect box, p2Point<int>Position,bool canMove)
+	:elementType(ELEMENT), box(box),  Position(Position),canMove(canMove)
 {
+	SetSize(box.w, box.h);
+
+	textu = App->gui->GetAtlas();
 }
-UIelement::UIelement(int id,type elementType, SDL_Rect box, p2Point<int>Position, bool canMove)
-	:elementType(elementType),box(box),id(id), Position(Position), canMove(canMove)
+UIelement::UIelement(type elementType, SDL_Rect box, p2Point<int>Position, bool canMove)
+	:elementType(elementType),box(box),Position(Position), canMove(canMove)
 {
 }
 
@@ -22,51 +25,6 @@ UIelement::~UIelement()
 
 bool UIelement::update(const UIelement* mouse_hover, const UIelement* focus)
 {
-	//bool ret = true;
-
-	//iPoint MousePos, MousePos2;
-
-	//App->input->GetMousePosition(MousePos.x, MousePos.y);
-
-	////CheckInput(mouse_hover,focus);
-
-	//if (Sons.count() != 0) {
-	//	p2List_item<UIelement*>*ite = Sons.start;
-
-	//	while (ite != nullptr) {
-	//		if (ite->data->isMoving == true)
-	//			canUpdate = true;
-
-	//		ite = ite->next;
-	//	}
-	//}
-
-	//if (canUpdate == false) {
-	//	if (isMouseRect(MousePos.x, MousePos.y) == true){
-
-	//		if (canMove == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-	//			isMoving = true;
-	//			move();
-	//		}
-	//		else {
-	//			isMoving = false;
-	//		}
-	//	}
-	//}
-
-	////canUpdate = false;
-	//
-	////LastPos.x = MousePos.x;
-	////LastPos.y = MousePos.y;	
-
-	//if (Sons.count() != 0) {
-	//	p2List_item<UIelement*>*ite = Sons.start;
-
-	//	while (ite != nullptr) {
-	//			ite->data->update(mouse_hover,focus);
-	//			ite = ite->next;
-	//		}
-	// }
 	CheckInput(mouse_hover, focus);
 
 	bool ret = false;
@@ -96,7 +54,7 @@ bool UIelement::update(const UIelement* mouse_hover, const UIelement* focus)
 
 				if (canMove == true) {
 					move();
-
+					//behaviourr
 				}
 			}
 			else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) {
@@ -118,16 +76,25 @@ bool UIelement::update(const UIelement* mouse_hover, const UIelement* focus)
 	return ret;
 }
 
+
 bool UIelement::draw()
 {
-	bool ret = false;
 
-	if (elementType ==ELEMENT){
-		App->render->Blit(App->gui->GetAtlas(), Position.x, Position.y, &GetBox());
-		ret = true;
+
+	if (elementType == ELEMENT) {
+
+		if (Parent && Parent->cut_childs)
+		{
+			SDL_Rect rec = Parent->GetScreenRect();
+			App->render->SetViewPort(rec);
+		}
+
+		App->render->Blit(textu, Position.x, Position.y, (SDL_Rect*)&box, 0.0f);
+		if (Parent && Parent->cut_childs)
+			App->render->ResetViewPort();
 	}
 
-	return ret;
+	return true;
 }
 
 bool UIelement::handle_intro()
@@ -142,7 +109,12 @@ SDL_Rect UIelement::GetScreenRect() const
 		iPoint p = GetScreenPos();
 		return{ p.x, p.y, box.w, box.h };
 	}
+
 	return box;
+}
+SDL_Rect UIelement::GetLocalRect() const
+{
+	return Rect;
 }
 iPoint UIelement::GetScreenPos() const
 {
@@ -184,8 +156,8 @@ void UIelement::move()
 
 void UIelement::SetAtMiddle()
 {
-	int frame_w = (Parent) ? Parent->GetBox().w : App->render->camera.w;
-	int frame_h = (Parent) ? Parent->GetBox().h : App->render->camera.h;
+	int frame_w = (Parent) ? Parent->GetLocalRect().w : App->render->camera.w;
+	int frame_h = (Parent) ? Parent->GetLocalRect().h : App->render->camera.h;
 
 	SetLocalPos(frame_w / 2 - box.w / 2, frame_h / 2 - box.h / 2);
 }
@@ -243,19 +215,25 @@ void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)
 	App->input->GetMousePosition(MousePos.x, MousePos.y);
 
 	if (isMouseRect(MousePos.x, MousePos.y) == true) {
-		
 
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN){
 			App->scene->behaviour(this, mouse_lclick_down);
-
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+			isClicked = true;
+	}
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
 			App->scene->behaviour(this, mouse_lclick_up);
-
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
+			isClicked = true;
+	}
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN){
 			App->scene->behaviour(this, mouse_rclick_down);
-
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
+			isClicked = true;
+	}
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) {
 			App->scene->behaviour(this, mouse_lclick_up);
+			isClicked = true;
+		}
+		
 
 
 
@@ -263,7 +241,14 @@ void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)
 			App->scene->behaviour(this, mouse_lclick_repeat);
 		if (canMove == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			App->scene->behaviour(this, mouse_rclick_repeat);
+
+		else if(isClicked != true)
+			App->scene->behaviour(this, gain_focus);
+		
 	}
+
+	else if(isMouseRect(MousePos.x, MousePos.y) == false&&isClicked==false)
+		App->scene->behaviour(this, lost_focus);
 
 
 	if (have_focus != (focus == this))

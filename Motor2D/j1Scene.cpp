@@ -39,60 +39,73 @@ bool j1Scene::Start()
 
 	// Load textures
 	background = App->tex->Load("textures/login_background.png");
-	
-	
-	//create Window ->id==0;
-	
-	window = App->gui->CreateElement(UIELEMENT,	SDL_Rect{ 0, 512, 484, 512 },p2Point<int>{400, 50},	true);
+
+
+	//--------------------------UI-----------------------------------------------------------------
+
+	//create Window ----------------------------------------
+
+	window = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 0, 512, 484, 512 }, p2Point<int>{400, 50}, true);
 	window->SetAtMiddle();
 	window->interactive = true;
+	window->cut_childs = false;
+	//static text ----------------------------------------
+	title = App->gui->CreateLabel("Window Title", p2Point<int>{450, 160});
+	title->SetParent(window);
 
-	// Create elements
-
-	button = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 0, 110, 230, 71 },p2Point<int>{525, 400}, false);
+	//button  --------------------------------------------
+	button = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 0, 110, 230, 71 }, p2Point<int>{525, 450}, false);
 	//button->SetListener(this);
 	button->interactive = true;
 	button->can_focus = true;
-	
-	button->SetParent(window);
-	//window->AddSon(button);
-	textt = App->gui->CreateElement(UITXT, SDL_Rect{ 0, 0, 0, 0 }, "hELLO", p2Point<int>{ 525, 200 }, true);
-	button->interactive = false;
-	button->can_focus = false;
-	window->AddSon(textt);
+	//text button 
+	text = App->gui->CreateLabel("Button", p2Point<int>{620, 470 });
+	button->AddSon(text);//tree
+	window->AddSon(button);//tree
+
+	//back text typer------------------------------------
+	Text_typer_back = App->gui->CreateElement(UIELEMENT, SDL_Rect{ 485, 566, 350, 66 }, p2Point<int>{475, 375}, false);
+	Text_typer_back->interactive = true;
+	Text_typer_back->can_focus = true;
+	window->AddSon(Text_typer_back);//tree
+
+
+	typer  = App->gui->Createtyper(UITXTTYPER, SDL_Rect{ 0, 0, 0, 0 }, "Type Here..", p2Point<int>{500, 400}, false);
+	Text_typer_back->AddSon(typer);//tree
 
 
 
-	//UIelement* button = App->gui->CreateElement(		UIBUT,		SDL_Rect{ 0, 110, 230, 71 },					p2Point<int>{525,400},	false);
-	
-	//UIelement* Text_typer_back = App->gui->CreateElement(UIBUT, SDL_Rect{ 485, 566, 350, 66 },					p2Point<int>{475, 300}, true);
-	//UIelement* Text_typer = App->gui->CreateElement(	UITXTTYPER,		SDL_Rect{ 0, 0, 0, 0 },			"Type Here",	p2Point<int>{500, 325}, false);	
 
-	//window->AddSon(button); 
-	//
-	//window->AddSon(Text_typer_back);
-	//Text_typer_back->AddSon(Text_typer);
-	 
+
+
+
+
+
+
+
+	//------------------------------------------
+	//cursor  ------------------------------------------
+	curs = App->gui->CreateElement(UICURSOR, SDL_Rect{ 994,728, 25, 23 }, p2Point<int>{ 0, 0 },true);
+	curs->SetListener(this);
+	curs->interactive = true;
+	curs->can_focus = false;
+	//-----------------------------------------------------------------------------------------------
+
 	return true;
 }
 
 // Called each loop iteration
 bool j1Scene::PreUpdate()
 {
-
+	
 	return true;
 }
 
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	//--------------------------UI-----------------------------------------------------------------
-
-		if (window)
-			App->gui->EnableGui(window);
-
-	//-----------------------------------------------------------------------------------------------
 	
+
 	return true;
 }
 
@@ -111,22 +124,15 @@ bool j1Scene::PostUpdate()
 bool j1Scene::CleanUp()
 {
 
-	App->gui->DeleteGui(window);
+	//App->gui->DeleteGui(window);
 
 	LOG("Freeing scene");
 
 	return true;
 }
 
-
-
-
 void j1Scene::behaviour(UIelement* ui, UIEvents event)
 {
-	/*Normal Button coords are {0,111,229,69} - hover state
-	Bright Button coords are {410,169,229,69} - click state
-	Dark Button coords are {645,165,229,69} - normal state
-	*/
 
 	if (ui == button)
 	{
@@ -137,9 +143,9 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 			button->SetBox(SDL_Rect{ 0,113,229,69 });
 
 			break;
-		case mouse_lclick_repeat:
-			ui->move();
-			break;
+		//case mouse_lclick_repeat:
+		//	//ui->move();
+		//	break;
 		case mouse_leaves:
 		case lost_focus:
 			button->SetBox(SDL_Rect{ 642, 169, 229, 69 });
@@ -189,25 +195,25 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 	}
 	*/
 
-	/*
-	if (ui->type == GuiTypes::mouse_cursor)
+
+	if (ui == curs)
 	{
 		switch (event)
 		{
 		case mouse_lclick_down:
-			curs->SetSection(rectangle{ 48, 1, 46, 48 });
+			curs->SetBox(SDL_Rect{ 994, 704, 46, 48 });
 			break;
 		case mouse_lclick_up:
-			curs->SetSection(rectangle{ 0, 1, 46, 48 });
+			curs->SetBox(SDL_Rect{ 994, 728, 25, 23 });
 			break;
 		case mouse_rclick_down:
-			curs->SetSection(rectangle{ 96, 1, 46, 48 });
+			curs->SetBox(SDL_Rect{ 994,752, 25, 23 });
 			break;
 		case mouse_rclick_up:
-			curs->SetSection(rectangle{ 0, 1, 46, 48 });
+			curs->SetBox(SDL_Rect{ 994, 728, 25, 23 });
 			break;
 		}
-	}*/
+	}
 
 
 }
