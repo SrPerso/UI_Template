@@ -88,6 +88,45 @@ bool j1FileSystem::IsDirectory(const char* file) const
 	return PHYSFS_isDirectory(file) != 0;
 }
 
+//create a directory
+bool j1FileSystem::MakeDirectory(const char* dirname)
+{
+	bool ret = false;
+
+	if (PHYSFS_mkdir(dirname) == 0)
+		LOG("Error while trying to create a new directory (%s): %s\n", dirname, PHYSFS_getLastError());
+	else
+		ret = true;
+
+	return ret;
+}
+//delete a file
+bool j1FileSystem::Deletefile(const char * filename)
+{
+	bool ret = false;
+
+	if (PHYSFS_delete(filename) == 0)
+		LOG("Error while trying to delete the file (%s): %s\n", filename, PHYSFS_getLastError());
+	else
+		ret = true;
+
+	return ret;
+}
+//length of a file
+
+int j1FileSystem::FileLength(PHYSFS_File * file) {
+ 
+	int ret = 0;
+
+	if (PHYSFS_fileLength(file) == -1)
+		LOG("Error while trying to determinate the length of the file (%s): %s\n", file, PHYSFS_getLastError());
+	else
+		ret = true;
+
+	return ret;
+
+}
+
 // Read a whole file and put it in a new buffer
 unsigned int j1FileSystem::Load(const char* file, char** buffer) const
 {

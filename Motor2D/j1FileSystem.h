@@ -2,7 +2,7 @@
 #define __j1FILESYSTEM_H__
 
 #include "j1Module.h"
-
+#include "PhysFS/include/physfs.h"
 struct SDL_RWops;
 
 int close_sdl_rwops(SDL_RWops *rw);
@@ -26,6 +26,10 @@ public:
 	bool AddPath(const char* path_or_zip, const char* mount_point = NULL);
 	bool Exists(const char* file) const;
 	bool IsDirectory(const char* file) const;
+	bool MakeDirectory(const char* dirname);
+	bool Deletefile(const char* filename);
+	int FileLength(PHYSFS_File*file);
+	
 	const char* GetSaveDirectory() const
 	{
 		return "save/";
