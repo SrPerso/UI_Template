@@ -134,94 +134,94 @@ void UIVscrollBar::move()
 
 
 //--------------------------
-
-
-GuiHScroll::GuiHScroll(const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
-	: bar(App->gui->GetAtlas(), bar_sect), thumb(App->gui->GetAtlas(), thumb_sect), margins(margins), slider_value(value)
-{
-
-	SetSize(bar.GetBox().w + offset.w, bar.GetBox().h + offset.h);
-	this->bar.SetParent(this);
-	this->thumb.SetParent(this);
-	this->bar.SetLocalPos(offset.x, offset.y);
-	this->thumb.SetLocalPos(margins.x, margins.y);
-
-	min_x = margins.x;
-	max_x = bar.GetBox().w + offset.w - margins.x - thumb.GetBox().w;
-}
-
-GuiHScroll::~GuiHScroll()
-{
-}
-
-void GuiHScroll::Update(const UIelement* mouse_hover, const UIelement* focus)
-{
-	int requested_change = 0;
-
-	if (focus == this)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == j1KeyState::KEY_REPEAT)
-		{
-			requested_change = -1;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == j1KeyState::KEY_REPEAT)
-		{
-			requested_change = 1;
-		}
-	}
-
-	if (mouse_hover == this)
-	{
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == j1KeyState::KEY_REPEAT)
-		{
-			iPoint mouse;
-			App->input->GetMousePosition(mouse.x, mouse.y);
-			if (thumb.GetScreenRect().Contains(mouse.x, mouse.y))
-			{
-				iPoint motion;
-				App->input->GetMouseMotion(motion.x, motion.y);
-				requested_change = motion.x;
-			}
-			else
-			{
-				iPoint pos = thumb.GetScreenPos();
-				if (mouse.x < pos.x)
-					requested_change = -1;
-				else
-					requested_change = 1;
-			}
-		}
-	}
-
-	if (requested_change != 0)
-	{
-		iPoint p = thumb.GetLocalPos();
-		int x = MIN(max_x, p.x + requested_change);
-		if (x < min_x)
-			x = min_x;
-
-		if (x != p.x)
-		{
-			if (listener != NULL)
-				listener->behaviour(this, value_changed);
-			thumb.SetLocalPos(x, p.y);
-		}
-	}
-}
-
-void GuiHScroll::Draw()const
-{
-	bar.draw();
-	thumb.draw();
-}
-
-float GuiHScroll::GetValue() const
-{
-	iPoint p = thumb.GetLocalPos();
-	return float((p.x * slider_value) / max_x);
-}
-
-void GuiHScroll::SetSliderValue(float value)
-{
-	slider_value = value;
-}
+//
+//
+//GuiHScroll::GuiHScroll(const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
+//	: bar(App->gui->GetAtlas(), bar_sect), thumb(App->gui->GetAtlas(), thumb_sect), margins(margins), slider_value(value)
+//{
+//
+//	SetSize(bar.GetBox().w + offset.w, bar.GetBox().h + offset.h);
+//	this->bar.SetParent(this);
+//	this->thumb.SetParent(this);
+//	this->bar.SetLocalPos(offset.x, offset.y);
+//	this->thumb.SetLocalPos(margins.x, margins.y);
+//
+//	min_x = margins.x;
+//	max_x = bar.GetBox().w + offset.w - margins.x - thumb.GetBox().w;
+//}
+//
+//GuiHScroll::~GuiHScroll()
+//{
+//}
+//
+//void GuiHScroll::Update(const UIelement* mouse_hover, const UIelement* focus)
+//{
+//	int requested_change = 0;
+//
+//	if (focus == this)
+//	{
+//		if (App->input->GetKey(SDL_SCANCODE_LEFT) == j1KeyState::KEY_REPEAT)
+//		{
+//			requested_change = -1;
+//		}
+//		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == j1KeyState::KEY_REPEAT)
+//		{
+//			requested_change = 1;
+//		}
+//	}
+//
+//	if (mouse_hover == this)
+//	{
+//		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == j1KeyState::KEY_REPEAT)
+//		{
+//			iPoint mouse;
+//			App->input->GetMousePosition(mouse.x, mouse.y);
+//			if (thumb.GetScreenRect().Contains(mouse.x, mouse.y))
+//			{
+//				iPoint motion;
+//				App->input->GetMouseMotion(motion.x, motion.y);
+//				requested_change = motion.x;
+//			}
+//			else
+//			{
+//				iPoint pos = thumb.GetScreenPos();
+//				if (mouse.x < pos.x)
+//					requested_change = -1;
+//				else
+//					requested_change = 1;
+//			}
+//		}
+//	}
+//
+//	if (requested_change != 0)
+//	{
+//		iPoint p = thumb.GetLocalPos();
+//		int x = MIN(max_x, p.x + requested_change);
+//		if (x < min_x)
+//			x = min_x;
+//
+//		if (x != p.x)
+//		{
+//			if (listener != NULL)
+//				listener->behaviour(this, value_changed);
+//			thumb.SetLocalPos(x, p.y);
+//		}
+//	}
+//}
+//
+//void GuiHScroll::Draw()const
+//{
+//	bar.draw();
+//	thumb.draw();
+//}
+//
+//float GuiHScroll::GetValue() const
+//{
+//	iPoint p = thumb.GetLocalPos();
+//	return float((p.x * slider_value) / max_x);
+//}
+//
+//void GuiHScroll::SetSliderValue(float value)
+//{
+//	slider_value = value;
+//}

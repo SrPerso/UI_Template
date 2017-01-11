@@ -30,27 +30,27 @@ private:
 };
 #endif // !_SCROLLBAR_
 
-
-assert(eqwe);
-
-class GuiHScroll : public UIelement
-{
-public:
-	GuiHScroll(SDL_Rect, p2Point<int>, bool, const SDL_Rect&, const SDL_Rect&, const SDL_Rect&, iPoint, float);
-	~GuiHScroll();
-
-	void Update(const UIelement* mouse_hover, const UIelement* focus);
-	void Draw() const;
-	float GetValue() const;
-	void SetSliderValue(float value);
-
-private:
-
-	UIelement bar;
-	UIelement thumb;
-	iPoint margins;
-	int min_x = 0;
-	int max_x = 0;
-	int thumb_pos = 0;
-	float slider_value = 0;
-};
+//
+//assert(eqwe);
+//
+//class GuiHScroll : public UIelement
+//{
+//public:
+//	GuiHScroll(SDL_Rect, p2Point<int>, bool, const SDL_Rect&, const SDL_Rect&, const SDL_Rect&, iPoint, float);
+//	~GuiHScroll();
+//
+//	void Update(const UIelement* mouse_hover, const UIelement* focus);
+//	void Draw() const;
+//	float GetValue() const;
+//	void SetSliderValue(float value);
+//
+//private:
+//
+//	UIelement bar;
+//	UIelement thumb;
+//	iPoint margins;
+//	int min_x = 0;
+//	int max_x = 0;
+//	int thumb_pos = 0;
+//	float slider_value = 0;
+//};
