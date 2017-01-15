@@ -12,6 +12,7 @@
 UIlabel::UIlabel() : UIelement() {
 	elementType = UILABEL;
 	texture = NULL;
+
 }
 
 UIlabel::UIlabel(const char* text) : UIelement()
@@ -25,6 +26,14 @@ UIlabel::UIlabel(const char * text, p2Point<int>pos)
 	SetText(text);
 	elementType = UILABEL;
 	Position = pos;
+	canMove = true;
+
+	int w = 0, h = 0;
+	App->font->CalcSize(text, w, h);
+	box = { Position.x,Position.y,w + Position.x,h + Position.y };
+
+
+//	App->font->CalcSize("A", box.x, box.y);
 }
 // --------------------------
 UIlabel::~UIlabel()
@@ -34,7 +43,7 @@ UIlabel::~UIlabel()
 }
 
 // --------------------------
-void UIlabel::SetText(const char* text)
+void UIlabel::SetText(const char* text) 
 {
 	if (texture != nullptr)
 		SDL_DestroyTexture(texture);
@@ -66,6 +75,56 @@ void UIlabel::Draw()
 	iPoint p = GetScreenPos();
 	App->render->Blit(texture, p.x, p.y);
 }
+
+bool UIlabel::update(const UIelement * mouse_hover, const UIelement * focus)
+{
+
+		bool ret = false;
+
+			// ------------------------------move
+		iPoint MousePos, MousePos2;
+
+		App->input->GetMousePosition(MousePos.x, MousePos.y);
+
+		if (isMouseRect(MousePos.x, MousePos.y) == true) {
+			elementState = MouseIn;
+
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) {
+				elementState = Mouseb1;
+
+				if (canMove == true) 
+				move();		
+			}
+			else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT)) {
+				elementState = Mouseb2;
+			}
+		}
+		else {
+		elementState = MouseOut;
+		isMoving = false;
+		}
+	
+		LastPos.x = MousePos.x;
+		LastPos.y = MousePos.y;
+
+		
+		return true;
+}
+
+
+void UIlabel::move()
+{
+	int Mx, My, Rx, Ry;
+
+	App->input->GetMousePosition(Mx, My);
+
+	Position.x += (Mx - LastPos.x);
+	Position.y += (My - LastPos.y);
+
+	isMoving = true;
+
+}
+
 
 //modificable text
 UIText::UIText(SDL_Rect section, p2SString defaultText, uint width, p2Point<int>Position, bool move, bool Password, int Max_quantity)
@@ -107,7 +166,7 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 
 	bool ret = false;
 
-	/*	// ------------------------------move
+	// ------------------------------move
 	iPoint MousePos, MousePos2;
 
 	App->input->GetMousePosition(MousePos.x, MousePos.y);
@@ -150,7 +209,7 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
 
-	*/
+	
 	//------------------------------------------------------------------------------------------------
 
 	if (interactive == false)
@@ -247,12 +306,13 @@ if (input != user_input)
 		{
 			if (listener)
 				listener->behaviour(this, return_down);
-		}
 
-		if (selection != 0 && listener != nullptr)
-		{
-			listener->behaviour(this, input_submit);
+			if (selection != 0 && listener != nullptr)
+			{
+				listener->behaviour(this, input_submit);
+			}
 		}
+		
 	}
 	return true;
 }

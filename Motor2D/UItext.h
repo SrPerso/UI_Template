@@ -17,6 +17,11 @@ public:
 	const SDL_Texture* GetTexture() const;
 	bool draw();
 	void Draw();
+
+
+	bool update(const UIelement* mouse_hover, const UIelement* focus);
+	void move();
+
 public:
 
 	
@@ -26,6 +31,7 @@ public:
 
 class UIText :public UIelement {
 public:
+
 	UIText(const SDL_Rect section,p2SString, uint, p2Point<int>, bool, bool, int);
 	~UIText();
 
@@ -42,7 +48,7 @@ public:
 private:
 	int max_quantity=10;
 	int last_cursor = 0;
-	iPoint cursor_coords = { 0, 0 };
+	iPoint cursor_coords = { 10, 100 };
 	const char* Deftext;
 	p2SString input;
 	SDL_Texture* texture;

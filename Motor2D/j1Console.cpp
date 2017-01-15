@@ -14,6 +14,8 @@
 #include "j1Console.h"
 #include "j1Module.h"
 #include "j1App.h"
+#include "j1Scene.h"
+
 
 // -----j1Console--------------------------
 j1Console::j1Console() : j1Module()
@@ -25,6 +27,11 @@ j1Console::j1Console() : j1Module()
 j1Console::~j1Console()
 {}
 
+void strcpy_tolower(char* dst, const char* src)
+{
+	while (*dst++ = tolower(*src++));
+}
+
 bool j1Console::Awake(pugi::xml_node& config)
 {
 	bool ret = true;
@@ -32,7 +39,8 @@ bool j1Console::Awake(pugi::xml_node& config)
 	//COMANDS
 	AddCommand(&c_Quit);
 	AddCommand(&c_Close);
-
+	AddCommand(&c_Load);
+	AddCommand(&c_Save);
 	return ret;
 }
 
@@ -92,7 +100,6 @@ bool j1Console::Update(float dt)
 		
 		}
 	}
-
 	return ret;
 }
 
@@ -101,6 +108,8 @@ bool j1Console::PostUpdate()
 	bool ret = true;
 
 	ret = !CloseGame;
+
+
 
 	return ret;
 }
@@ -122,6 +131,8 @@ void j1Console::behaviour(UIelement* ui, UIEvents event)
 			UIText* input = (UIText*)ui;
 			GetInput(input->GetString());
 			InputText->Clear();
+
+			event = lost_focus;
 		}
 	}
 }
@@ -172,53 +183,77 @@ uint j1Console::AddCVar(const char* name, bool* reference, j1Module* listener, b
 	return CVarList.count() - 1;
 }
 
-void j1Console::GetInput(const char* src)
+void j1Console::Print(const char* string)
 {
-	p2DynArray<p2SString> S_input;
-	CutString(src, &S_input);
+	s_output += "\n";
+	s_output += string;
+	output_dirty = true;
+}
 
-	Command* com = FindCommand(S_input[0].GetString(), S_input.Count() - 1);
-	if (com)
-	{
-		com->Function(&S_input);
-	}
-	else
-	{
-		CVar* cVar = FindCVar(S_input.At(0)->GetString());
-		if (cVar)
+void j1Console::PrintError(const char* string)
+{
+	s_output += "\nERROR: ";
+	s_output += string;
+	output_dirty = true;
+}
+
+bool j1Console::GetInput(const char* src)
+{
+	bool ret = false;
+
+		p2DynArray<p2SString> S_input;
+		CutString(src, &S_input);
+
+		Command* com = FindCommand(S_input[0].GetString(), S_input.Count() - 1);
+
+		if (com)
 		{
-			if (S_input.Count() == 1)
-			{
-				cVar->DisplayLog();
-			}
-			else if (S_input.Count() == 2 || S_input.Count() == 3)
-			{
-				if (S_input.Count() == 3)
-				{
-					cVar->Serialize = std::stoi(S_input.At(2)->GetString());
-				}
-				p2SString* str = S_input.At(1);
-				cVar->Set(str);
-			}
-			else
-			{
-				LOG("Sent too many arguments");
-			}
+			Output(com->Function(&S_input), counter);
+			counter++;
 		}
 		else
 		{
-			LOG("'%s' is not an intern command.", S_input[0].GetString());
+			CVar* cVar = FindCVar(S_input.At(0)->GetString());
+			if (cVar)
+			{
+				if (S_input.Count() == 1)
+				{
+					cVar->DisplayLog();
+				}
+				else if (S_input.Count() == 2 || S_input.Count() == 3)
+				{
+					if (S_input.Count() == 3)
+					{
+						cVar->Serialize = std::stoi(S_input.At(2)->GetString());
+					}
+					p2SString* str = S_input.At(1);
+					cVar->Set(str);
+				}
+				else
+				{
+					LOG("Sent too many arguments");
+					Output(com->Function(&S_input), counter);
+					counter++;
+				}
+			}
+			else
+			{
+				LOG("'%s' is not an intern command.", S_input[0].GetString());
+			}
 		}
-	}
-	S_input.Clear();
+		InputText->Clear();
+		S_input.Clear();	
+
+		return ret;
 }
 
-void j1Console::Output(char* str)
+void j1Console::Output(char* str,int num)
 {
-	UIlabel* out = App->gui->CreateLabel(str);
+	UIlabel* out = App->gui->CreateLabel(str, {10, 150 });
 	//Set the labbel position according to the scroll
 
 	output.PushBack(out);
+
 }
 
 void j1Console::Open()
@@ -278,6 +313,8 @@ bool j1Console::LoadCVars(pugi::xml_node&)
 	return ret;
 }
 
+
+
 void j1Console::CutString(const char* str, p2DynArray<p2SString>* dst)
 {
 	p2SString strr(str);
@@ -335,7 +372,6 @@ Command* j1Console::FindCommand(const char* str, uint nArgs)const
 			ret = NULL;
 		}
 	}
-
 	return ret;
 }
 
@@ -364,9 +400,11 @@ void j1Console::SetCVar(const char* calue)
 
 
 // ------Command--------------------------
-void Command::Function(const p2DynArray<p2SString>* args)
+char* Command::Function(const p2DynArray<p2SString>* args)
 {
 	LOG("Executing command function!");
+
+	return nullptr;
 }
 
 // -----CVar------------------------------
@@ -597,12 +635,28 @@ void CVar::DisplayLog()
 	}
 }
 
-void j1Console::C_Quit::Function(const p2DynArray<p2SString>* arg)
+char* j1Console::C_Quit::Function(const p2DynArray<p2SString>* arg)
 {
 	App->console->CloseGame = true;
+	return "Closing the Game";
 }
 
-void j1Console::C_Close::Function(const p2DynArray<p2SString>* arg)
+char* j1Console::C_Close::Function(const p2DynArray<p2SString>* arg)
 {
 	App->console->Close();
+
+	return "Closing the console";
+}
+
+char* j1Console::C_Load::Function(const p2DynArray<p2SString>* arg)
+{	
+	App->LoadGame("Game_Save.xml");
+	return "Loading";
+
+}
+
+char* j1Console::C_Save::Function(const p2DynArray<p2SString>* arg)
+{
+	App->SaveGame("Game_Save.xml");
+	return "Saving";
 }

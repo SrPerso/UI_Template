@@ -11,6 +11,9 @@ class UIlabel;
 class UIText;
 
 #define LINE_SPACE 15
+#define MAX_INPUT_LINE_SIZE 70
+#define COMMAND_NAME_SIZE 20
+#define COMAND_PADDING 35
 
 enum CVarTypes
 {
@@ -33,8 +36,8 @@ public:
 	p2SString Tag;
 
 	uint nArgs;
-
-	virtual void Function(const p2DynArray<p2SString>* args);
+	j1Module* listener = nullptr;
+	virtual char* Function(const p2DynArray<p2SString>* args);
 };
 
 
@@ -133,9 +136,9 @@ public:
 	uint AddCVar(const char* name, char* reference, j1Module* listener = NULL, bool serialize = false);
 	uint AddCVar(const char* name, bool* reference, j1Module* listener = NULL, bool serialize = false);
 
-	void GetInput(const char* src);
-
-	void Output(char* str);
+	bool GetInput(const char* src);
+	
+	void Output(char* str, int num);
 
 	void Open();
 	void Close();
@@ -150,24 +153,37 @@ public:
 	bool SaveCVars(pugi::xml_node&)const;
 	bool LoadCVars(pugi::xml_node&);
 
+
+	void Print(const char* string);
+	void PrintError(const char* string);
 private:
+
+	
 	void CutString(const char* str, p2DynArray<p2SString>* dst);
 	Command* FindCommand(const char* str, uint nArgs)const;
 	CVar* FindCVar(const char* str);
 	void SetCVar(const char* value);
 
 private:
+	// comands -------------------------------------------
 	p2List<Command*> commandList;
 	p2List<CVar*> CVarList;
 	p2DynArray<p2SString> tags;
 
+
+
+	p2SString s_output;
+	p2SString last_message;
+	p2SString last_error;
 	//UI ------------------------------------------------------------------------------------
 	UIelement* BigRectangle;
 	UIelement* SmallRectangle;
 	UIelement* InputText = NULL;
 
-	p2DynArray<UIlabel*> output;
+	UIlabel* text;
 
+	p2DynArray<UIlabel*> output;
+	bool output_dirty = false;
 	bool Active = false;
 	bool DragText = false;
 
@@ -176,20 +192,31 @@ private:
 
 	bool CloseGame = false;
 
-
-
+	int counter = 1;
+	// comands -------------------------------------------
 	struct C_Quit : public Command
 	{
 		C_Quit() : Command("quit", "Quit the game.", 0, "Console") {}
-		void Function(const p2DynArray<p2SString>* arg);
+		char* Function(const p2DynArray<p2SString>* arg);
 	}c_Quit;
 
 	struct C_Close : public Command
 	{
 		C_Close() : Command("close", "Close console.", 0, "Console") {}
-		void Function(const p2DynArray<p2SString>* arg);
+		char* Function(const p2DynArray<p2SString>* arg);
 	}c_Close;
 
+	struct C_Load : public Command
+	{
+		C_Load() : Command("Load", "Load text", 0, "Console") {}
+
+		char* Function(const p2DynArray<p2SString>* arg);
+	}c_Load;
+	struct C_Save : public Command
+	{
+		C_Save() : Command("Save", "Load text", 0, "Console") {}
+		char* Function(const p2DynArray<p2SString>* arg);
+	}c_Save;
 
 };
 

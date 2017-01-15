@@ -75,7 +75,7 @@ public:
 	// Gui creation functions
 	UIelement* CreateElement(const typegui, SDL_Rect, p2Point<int>,bool);
 	//UIelement* CreateElement(const typegui, SDL_Rect, p2SString,uint, p2Point<int>, bool, bool,int);
-	UIlabel* CreateLabel( char* text, p2Point<int> = {0,0});
+	UIlabel* CreateLabel( const char* text, p2Point<int> = {0,0});
 	UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value);
 	UIelement* Createtyper(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move);
 	UIText* j1Gui::CreateInput(const SDL_Rect& section, const char* default_text, uint width, const iPoint& offset, bool password, int max_quantity, bool move = false);
@@ -84,7 +84,10 @@ public:
 	SDL_Texture* GetAtlas() const;
 	p2List<UIelement*> GetElementlist() {	return elementlist;	}
 	UIRect* CreateRect(const SDL_Rect& box, SDL_Color color, bool move = false);
+	
 
+	bool Load(pugi::xml_node& data);
+	bool Save(pugi::xml_node& data) const;
 
 	void SetFocus(const UIelement* ui);
 	const UIelement* GetFocus() const;

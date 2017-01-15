@@ -275,7 +275,7 @@ UIRect * j1Gui::CreateRect(const SDL_Rect& box, SDL_Color color, bool move)
 }
 
 
-UIlabel * j1Gui::CreateLabel(char * text, p2Point<int>pos)
+UIlabel * j1Gui::CreateLabel(const char * text, p2Point<int>pos)
 {
 	UIlabel*created = NULL;
 
@@ -335,4 +335,43 @@ UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move
 }
 
 
+//load and save
 
+
+bool j1Gui::Load(pugi::xml_node& data)
+{
+	LOG("Loading UI positions");
+
+	for (pugi::xml_node ui = data.first_child(); ui; ui = ui.next_sibling())
+	{
+		p2List_item<UIelement*>* item = elementlist.At(ui.attribute("id").as_uint(-1));
+
+		if (item)
+		{
+			item->data->SetLocalPos(ui.attribute("x").as_int(0), ui.attribute("y").as_int(0));
+		}
+	}
+
+	return true;
+}
+
+// EXERCISE 4
+bool j1Gui::Save(pugi::xml_node& data) const
+{
+	LOG("Saving UI positions");
+
+	p2List_item<UIelement*>* item = elementlist.start;
+	int i = 0;
+	while (item)
+	{
+		pugi::xml_node ui = data.append_child("ui");
+		ui.append_attribute("id") = i++;
+		ui.append_attribute("x") = item->data->GetLocalPos().x;
+		ui.append_attribute("y") = item->data->GetLocalPos().y;
+
+		item = item->next;
+	}
+
+
+	return true;
+}

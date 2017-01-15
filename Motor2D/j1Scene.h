@@ -9,6 +9,13 @@ class UItext;
 class UIVscrollBar;
 struct Command;
 
+struct ui_label
+{
+	p2SString text;
+	uint x, y;
+	bool draggable;
+};
+
 class j1Scene : public j1Module
 {
 public:
@@ -19,7 +26,7 @@ public:
 	virtual ~j1Scene();
 
 	// Called before render is available
-	bool Awake();
+	bool Awake(pugi::xml_node& config);
 
 	// Called before the first frame
 	bool Start();
@@ -37,8 +44,11 @@ public:
 	bool CleanUp();
 
 	void behaviour(UIelement* ui, UIEvents event);
-
+	bool OnCommand(const Command* com, const p2DynArray<p2SString>& arguments, p2SString& return_message);
 	UIelement* typer = NULL;
+	p2List<ui_label> labels;
+	pugi::xml_node label;
+	pugi::xml_node label2;
 private:
 	SDL_Texture* background;
 	SDL_Texture* debug_tex;
@@ -54,7 +64,7 @@ private:
 	UIVscrollBar* Vscroll = NULL;
 	//ui---------------------------
 
-
+	
 	const Command* load = nullptr;
 	const Command* save = nullptr;
 

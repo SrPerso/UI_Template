@@ -24,13 +24,15 @@ j1Scene::~j1Scene()
 {}
 
 // Called before render is available
-bool j1Scene::Awake()
+bool j1Scene::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
 
+	for (label = config.child("ui_label"); label; label = label.next_sibling("ui_label"))
+		labels.add({ label.child_value(), label.attribute("x").as_uint(0), label.attribute("y").as_uint(0), label.attribute("drag").as_bool(false) });
 
-
+	label2 = config;
 	return ret;
 }
 
@@ -38,8 +40,40 @@ bool j1Scene::Awake()
 bool j1Scene::Start()
 {
 
+
+	debug_tex = App->tex->Load("maps/path.png");
+
+	if (App->map->Load("iso_walk.tmx") == true)
+	{
+		int w, h;
+		uchar* data = NULL;
+		if (App->map->CreateWalkabilityMap(w, h, &data))
+			App->pathfinding->SetMap(w, h, data);
+
+		RELEASE_ARRAY(data);
+	}
+
+
+
+
 	// Load textures
 	background = App->tex->Load("textures/login_background.png");
+
+
+		p2List_item<ui_label>* item = labels.start;
+	while(item)
+	{
+		UIlabel* l = App->gui->CreateLabel(item->data.text.GetString(), { (int)item->data.x,(int)item->data.y });
+
+		if(item->data.draggable == true)
+		{
+			l->interactive = true;
+			l->canMove = true;
+		}
+
+		item = item->next;
+	}
+
 
 
 	//--------------------------UI-----------------------------------------------------------------
@@ -93,31 +127,54 @@ bool j1Scene::Start()
 bool j1Scene::PreUpdate()
 {
 	
+	static iPoint origin;
+	static bool origin_selected = false;
+
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	iPoint p = App->render->ScreenToWorld(x, y);
+	p = App->map->WorldToMap(p.x, p.y);
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		if (origin_selected == true)
+		{
+			App->pathfinding->CreatePath(origin, p);
+			origin_selected = false;
+		}
+		else
+		{
+			origin = p;
+			origin_selected = true;
+		}
+	}
+
+
 	return true;
 }
 
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	/*
-	// -------
-	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-	//App->LoadGame("save_game.xml");
+	
+	//// -------
+	//if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	////App->LoadGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-	//App->SaveGame("save_game.xml");
+	//if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	////App->SaveGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	App->render->camera.y += (int) floor(200.0f * dt);
+	//if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	//App->render->camera.y += (int) floor(200.0f * dt);
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	App->render->camera.y -= (int) floor(200.0f * dt);
+	//if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	//App->render->camera.y -= (int) floor(200.0f * dt);
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	App->render->camera.x += (int) floor(200.0f * dt);
+	//if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	//App->render->camera.x += (int) floor(200.0f * dt);
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	App->render->camera.x -= (int)floor(200.0f * dt);
+	//if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	//App->render->camera.x -= (int)floor(200.0f * dt);
 	
 	App->map->Draw();
 
@@ -139,7 +196,7 @@ bool j1Scene::Update(float dt)
 	iPoint pos = App->map->MapToWorld(path->At(i)->x, path->At(i)->y);
 	App->render->Blit(debug_tex, pos.x, pos.y);
 	}
-	*/
+	
 
 	return true;
 }
@@ -246,4 +303,19 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 	}
 
 
+}
+
+
+bool j1Scene::OnCommand(const Command* com, const p2DynArray<p2SString>& arguments, p2SString& return_message)
+{
+	if (com == save)
+	{
+		App->SaveGame(arguments[1].GetString());
+	}
+	else if (com == load)
+	{
+		App->LoadGame(arguments[1].GetString());
+	}
+
+	return false;
 }
