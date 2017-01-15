@@ -106,17 +106,48 @@ bool j1Input::PreUpdate()
 					break;
 				}
 			break;
-			//case SDL_TEXTEDITING:
+	
 
-			//	//lastText = event.edit.text;
+			case SDL_KEYDOWN:
+			{
+				// Special case of micro controlling text input
+				if (text_input == true)
+				{
+					switch (event.key.keysym.sym)
+					{
+					case SDLK_BACKSPACE:
+						last_textinput.Cut(cursor - 1, cursor - 1);
+						if (cursor > 0)
+							cursor--;
+						break;
+					case SDLK_DELETE:
+						if (cursor < last_textinput.Length())
+							last_textinput.Cut(cursor, cursor);
+						break;
+					case SDLK_KP_ENTER:
+					case SDLK_RETURN2:
+					case SDLK_RETURN:
+						selection_len = 1;
+						break;
+					case SDLK_LEFT:
+						if (cursor > 0)
+							cursor--;
+						break;
+					case SDLK_RIGHT:
+						if (cursor < last_textinput.Length())
+							cursor++;
+						break;
+					case SDLK_HOME:
+						cursor = 0;
+						break;
+					case SDLK_END:
+						cursor = last_textinput.Length();
+						break;
+					}
+				}
 
-			//	//cursor_text_input = event.edit.start;
-
-			//	//selection_text_input = event.edit.length;
-
-			//	LOG("Edit event: %s cursor %d selection %d", event.edit.text, event.edit.start, event.edit.length);
-
-			//	break;
+				//LOG("Key %d changes state to %d", code, state);
+			}
 
 			case SDL_KEYUP:
 
@@ -295,4 +326,11 @@ void j1Input::StopTyping2() {
 }
 const char* j1Input::GetText2() {
 	return lastText.GetString();
+}
+
+void j1Input::ClearTyping()
+{
+	cursor = selection_len = 0;
+	last_textinput.Clear();
+
 }

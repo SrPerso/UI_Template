@@ -25,7 +25,7 @@ public:
 
 class UIText :public UIelement {
 public:
-	UIText(const SDL_Rect section,p2SString, uint, p2Point<int>, bool, type, bool, int);
+	UIText(const SDL_Rect section,p2SString, uint, p2Point<int>, bool, bool, int);
 	~UIText();
 
 	const char* getText()const;
@@ -35,10 +35,11 @@ public:
 
 	//bool handle_intro();
 	//void setText(const char*);
-	void SetNewSCoods(const int&, const int&);
+//	void SetNewSCoods(const int&, const int&);
 	void move();
 //	SDL_Rect getrect();
-
+	const char* GetString()const;
+	void Clear();
 private:
 	int max_quantity=10;
 	int last_cursor = 0;
@@ -46,6 +47,7 @@ private:
 	const char* Deftext;
 	p2SString input;
 	SDL_Texture* texture;
+
 
 private:
 	UIelement backgro;
@@ -57,5 +59,31 @@ private:
 	bool had_focus = false;
 	bool show_def_text;
 };
+//--------------------------------------
+
+class UITyper :public UIelement {
+public:
+	UITyper(SDL_Rect, p2SString, p2Point<int>, bool);
+	~UITyper();
+
+	const char* getText()const;
+
+	bool update(const UIelement* mouse_hover, const UIelement* focus);
+	bool draw();
+	bool handle_intro();
+	void setText(const char*);
+	void SetNewSCoods(const int&, const int&);
+	void move();
+	SDL_Rect getrect();
+
+
+
+private:
+	p2SString* text;
+	SDL_Texture* texture;
+	bool istyping = false;
+};
+
+
 
 #endif // !_UI_TEXT_

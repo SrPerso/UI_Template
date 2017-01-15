@@ -5,7 +5,7 @@
 #include "SDL\include\SDL.h"
 #include "j1Module.h"
 
-enum type { TEXT, IMAGE, ELEMENT, BUTTON,MOUSE_CURSOR, UNKNOWN , UILABEL, TXTTYPER, VSCROLL,HSCROLL };
+enum type { TEXT, IMAGE, ELEMENT, BUTTON,MOUSE_CURSOR, UNKNOWN , UILABEL, TXTTYPER,UIRECT, VSCROLL,HSCROLL };
 enum ElementsState { MouseIn, Mouseb1, Mouseb2, MouseOut, sUnknown };
 
 class UIelement {
@@ -39,6 +39,8 @@ public:
 	iPoint GetScreenPos() const;
 	iPoint GetLocalPos() const;
 	type GetType()const { return elementType; }
+
+	void Clear();
 
 	void CheckInput(const UIelement* mouse_hover, const UIelement* focus);
 	bool isMouseRect(int, int);

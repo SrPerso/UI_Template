@@ -7,6 +7,7 @@
 #include "j1Scene.h"
 
 #include <stdio.h>
+
 UIelement::UIelement( SDL_Rect box, p2Point<int>Position,bool canMove)
 	:elementType(ELEMENT), box(box),  Position(Position),canMove(canMove)
 {
@@ -14,6 +15,7 @@ UIelement::UIelement( SDL_Rect box, p2Point<int>Position,bool canMove)
 
 	textu = App->gui->GetAtlas();
 }
+
 UIelement::UIelement(type elementType, SDL_Rect box, p2Point<int>Position, bool canMove)
 	:elementType(elementType),box(box),Position(Position), canMove(canMove)
 {
@@ -76,7 +78,6 @@ bool UIelement::update(const UIelement* mouse_hover, const UIelement* focus)
 	return ret;
 }
 
-
 bool UIelement::draw()
 {
 
@@ -112,10 +113,12 @@ SDL_Rect UIelement::GetScreenRect() const
 
 	return box;
 }
+
 SDL_Rect UIelement::GetLocalRect() const
 {
 	return Rect;
 }
+
 iPoint UIelement::GetScreenPos() const
 {
 	if (Parent != nullptr)
@@ -206,6 +209,10 @@ UIelement * UIelement::IsTheGrandParent()
 		return this;
 	}
 	
+}
+
+void UIelement::Clear()
+{
 }
 
 void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)

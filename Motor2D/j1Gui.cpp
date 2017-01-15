@@ -10,7 +10,7 @@
 #include "j1Scene.h"
 #include "UIelement.h"
 #include "UIMouse.h"
-#include "UItext2.h"
+#include "UItext.h"
 
 j1Gui::j1Gui() : j1Module()
 {
@@ -133,6 +133,7 @@ SDL_Texture* j1Gui::GetAtlas() const
 	return atlas;
 }
 
+
 const UIelement* j1Gui::FindMouseHover()const
 {
 	iPoint mouse;
@@ -222,36 +223,19 @@ UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Poin
 	return created;
 }
 
-UIelement* j1Gui::CreateElement(const typegui elementType, SDL_Rect section, p2SString defaultText, uint width, p2Point<int>Position,
-	bool move, bool password, int max_quantity)
+UIRect * j1Gui::CreateRect(const SDL_Rect& box, SDL_Color color, bool move)
 {
-	assert(elementType == UITXT || elementType == UITXTTYPER);
+	UIRect* created = NULL;
 
-	UIelement* created = nullptr;
+	created = new UIRect(box, { box.x,box.y}, color, move);
+	elementlist.add(created);
 
-	switch (elementType)
-	{
-	case UITXT:
-
-		created = new UItext(section, defaultText,Position, move);
-		break;
-
-	case UITXTTYPER:
-
-		created = new UIText(section, defaultText, width, Position, move, TXTTYPER, password, max_quantity);
-		break;
-
-	}//switch
-
-	if (created != nullptr)
-	{
-		elementlist.add(created);
-	}
 
 	return created;
 }
 
-UIlabel * j1Gui::CreateLabel(const char * text, p2Point<int>pos)
+
+UIlabel * j1Gui::CreateLabel(char * text, p2Point<int>pos)
 {
 	UIlabel*created = NULL;
 
@@ -276,7 +260,7 @@ UIelement* j1Gui::Createtyper(const typegui elementType, SDL_Rect box, p2SString
 
 	case UITXTTYPER:
 
-		created = new UItext(box, text, Position, move);
+		created = new UITyper(box, text, Position, move);
 		break;
 
 	}//switch
@@ -288,15 +272,26 @@ UIelement* j1Gui::Createtyper(const typegui elementType, SDL_Rect box, p2SString
 	}
 
 	return created;
-}//create element
+}
+
+UIText * j1Gui::CreateInput(const SDL_Rect & section, const char * default_text, uint width, const iPoint & offset, bool password, int max_quantity, bool move)
+{
+	UIText* created = NULL;
+
+	created = new UIText(section, default_text, width, offset, move,password, max_quantity);
+	elementlist.add(created);
+
+	return created;
+}
+//create element
 
 
 UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
 {
-	UIVscrollBar* ret = NULL;
+	UIVscrollBar* created = NULL;
 
-	ret = new UIVscrollBar(box,Position,move, bar_sect, thumb_sect, offset, margins,value);
-	elementlist.add(ret);
+	created = new UIVscrollBar(box,Position,move, bar_sect, thumb_sect, offset, margins,value);
+	elementlist.add(created);
 
-	return ret;
+	return created;
 }

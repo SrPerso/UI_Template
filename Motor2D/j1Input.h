@@ -77,6 +77,9 @@ public:
 	void StopTyping2();
 
 	const char* GetText2();
+
+	void ClearTyping();
+
 	// Get mouse / axis position
 	void GetMousePosition(int &x, int &y);
 	void GetMouseMotion(int& x, int& y);
@@ -91,12 +94,15 @@ private:
 	int			mouse_y = 0;
 
 private:
+	bool text_input;
 	int			last_cursor;
 	p2SString	last_textinput;
-	bool text_input;
 	p2SString lastText;
 	int cursor = 0;
 	int selection_len = 0;
+
+
+
 };
 
 #endif // __j1INPUT_H__

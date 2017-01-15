@@ -19,6 +19,8 @@ class j1Map;
 class j1PathFinding;
 class j1Fonts;
 class j1Gui;
+class j1Console;
+
 
 class j1App
 {
@@ -94,7 +96,7 @@ public:
 	j1PathFinding*		pathfinding = NULL;
 	j1Fonts*			font = NULL;
 	j1Gui*				gui = NULL;
-
+	j1Console*			console = NULL;
 private:
 
 	p2List<j1Module*>	modules;
