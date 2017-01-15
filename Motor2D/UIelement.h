@@ -21,6 +21,7 @@ public:
 	virtual bool draw();
 	virtual bool handle_intro();
 	virtual void move();
+	virtual void OnFocus(bool focus);
 
 	void SetAtMiddle();
 	void SetLocalPos(int x, int y);
@@ -40,12 +41,13 @@ public:
 	iPoint GetLocalPos() const;
 	type GetType()const { return elementType; }
 
-	void Clear();
+		void Clear();
 
 	void CheckInput(const UIelement* mouse_hover, const UIelement* focus);
 	bool isMouseRect(int, int);
 	virtual UIelement* IsTheGrandParent();
 	virtual void AddSon(UIelement*);
+
 
 public:
 	bool cut_childs = false;

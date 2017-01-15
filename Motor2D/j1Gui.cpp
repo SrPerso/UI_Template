@@ -47,8 +47,7 @@ bool j1Gui::PreUpdate()
 	if (mouse_hover &&
 		mouse_hover->can_focus == true &&
 		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == j1KeyState::KEY_DOWN)
-		focus = mouse_hover;
-
+		SetFocus(mouse_hover);
 
 	p2List_item<UIelement*>* item;
 
@@ -56,6 +55,7 @@ bool j1Gui::PreUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_TAB) == j1KeyState::KEY_DOWN)
 	{
 		int pos = elementlist.find((UIelement*)focus);
+		UIelement*focu=nullptr;
 		if (pos > 0)
 		{
 			focus = nullptr;
@@ -65,19 +65,20 @@ bool j1Gui::PreUpdate()
 			for (item; item; item = item->next)
 				if (item->data->can_focus == true && item->data->active == true)
 				{
-					focus = item->data;
+					focu = item->data;
 					break;
 				}
 		}
-		if (focus == nullptr)
+		if (focu == nullptr)
 		{
 			for (item = elementlist.start; item; item = item->next)
 				if (item->data->can_focus == true && item->data->active == true)
 				{
-					focus = item->data;
+					focu = item->data;
 					break;
 				}
 		}
+		SetFocus(focu);
 	}
 
 	// Now the iteration for input and update
@@ -150,7 +151,46 @@ const UIelement* j1Gui::FindMouseHover()const
 
 	return nullptr;
 }
-//enable
+
+void j1Gui::SetFocus(const UIelement* ui)
+{
+	if (ui != focus)
+	{
+		if (ui != nullptr)
+		{
+			if (ui->can_focus == true)
+			{
+				if (focus != nullptr)
+				{
+					if (focus->listener != nullptr)
+						focus->listener->behaviour(focus, lost_focus);
+					focus->OnFocus(false);
+				}
+				focus = (UIelement*)ui;
+				focus->OnFocus(true);
+				if (focus->listener != nullptr)
+					focus->listener->behaviour(focus, gain_focus);
+			}
+		}
+		else
+		{
+			if (focus != nullptr)
+			{
+				if (focus->listener != nullptr)
+					focus->listener->behaviour(focus, lost_focus);
+				focus->OnFocus(false);
+			}
+			focus = nullptr;
+		}
+	}
+}
+
+const UIelement* j1Gui::GetFocus() const
+{
+	return focus;
+}
+
+//enable- disable ------------------------------------------
 
 void j1Gui::EnableGui(UIelement* elem)
 {
@@ -194,7 +234,7 @@ bool j1Gui::DeleteGui(UIelement * elem)
 
 // class Gui ---------------------------------------------------
 
-
+//-- create elements
 UIelement * j1Gui::CreateElement(const typegui elementType, SDL_Rect box, p2Point<int>Position, bool move)
 {
 	assert(elementType == UIELEMENT|| elementType == UICURSOR);
@@ -248,7 +288,7 @@ UIlabel * j1Gui::CreateLabel(char * text, p2Point<int>pos)
 	return created;
 }
 
-//create element
+
 UIelement* j1Gui::Createtyper(const typegui elementType, SDL_Rect box, p2SString text, p2Point<int>Position, bool move)
 {
 	//assert(elementType == UITXT || elementType == UITXTTYPER);
@@ -283,8 +323,6 @@ UIText * j1Gui::CreateInput(const SDL_Rect & section, const char * default_text,
 
 	return created;
 }
-//create element
-
 
 UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move, const SDL_Rect& bar_sect, const SDL_Rect& thumb_sect, const SDL_Rect& offset, iPoint margins, float value)
 {
@@ -295,3 +333,6 @@ UIVscrollBar* j1Gui::CreateVScroll(SDL_Rect box, p2Point<int>Position, bool move
 
 	return created;
 }
+
+
+

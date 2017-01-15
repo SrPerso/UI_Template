@@ -47,8 +47,8 @@ bool j1Console::Start()
 	SmallRectangle = App->gui->CreateRect({ 0, 200,  (int)wX, 43 }, { 108, 123, 139, 100 });
 	SmallRectangle->active = false;
 
-	InputText = App->gui->Createtyper(UITXTTYPER, SDL_Rect{ 0, 0, 0, 0 }, "Type Here..", p2Point<int>{500, 400}, false);
-	//InputText = App->gui->Createtyper({ 0, 1024, (int)wX, 43 }, "", 315, { 0, 0 }, false, 70);
+	//InputText = App->gui->Createtyper(UITXTTYPER, SDL_Rect{ 0, 0, 0, 0 }, "Type Here..", p2Point<int>{500, 400}, false);
+	InputText = App->gui->CreateInput({ 0, 1024, (int)wX, 43 }, "type here", 315, { 0, 0 }, false,70, false);
 	InputText->SetLocalPos(0, 200);
 	InputText->interactive = true;
 	InputText->can_focus = true;
@@ -74,6 +74,8 @@ bool j1Console::Start()
 	return ret;
 }
 
+
+
 bool j1Console::Update(float dt)
 {
 	bool ret = true;
@@ -87,6 +89,7 @@ bool j1Console::Update(float dt)
 		else
 		{
 			Open();
+		
 		}
 	}
 
@@ -114,7 +117,7 @@ void j1Console::behaviour(UIelement* ui, UIEvents event)
 {
 	if (ui == InputText)
 	{
-		if (event == return_down)
+		if (event == input_submit )
 		{
 			UIText* input = (UIText*)ui;
 			GetInput(input->GetString());
@@ -224,7 +227,7 @@ void j1Console::Open()
 	BigRectangle->active = true;
 	SmallRectangle->active = true;
 	Active = true;
-	//App->gui->Focus(InputText);
+	App->gui->SetFocus(InputText);
 }
 
 void j1Console::Close()

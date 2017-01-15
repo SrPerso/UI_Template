@@ -19,6 +19,7 @@ public:
 	void Draw();
 public:
 
+	
 	SDL_Texture* texture = nullptr;
 };
 
@@ -33,9 +34,7 @@ public:
 	bool update(const UIelement* mouse_hover, const UIelement* focus);
 	bool draw();
 
-	//bool handle_intro();
-	//void setText(const char*);
-//	void SetNewSCoods(const int&, const int&);
+	void OnFocus(bool focus);
 	void move();
 //	SDL_Rect getrect();
 	const char* GetString()const;
@@ -48,6 +47,7 @@ private:
 	p2SString input;
 	SDL_Texture* texture;
 
+	
 
 private:
 	UIelement backgro;

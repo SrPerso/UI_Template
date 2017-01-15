@@ -85,10 +85,14 @@ public:
 	p2List<UIelement*> GetElementlist() {	return elementlist;	}
 	UIRect* CreateRect(const SDL_Rect& box, SDL_Color color, bool move = false);
 
+
+	void SetFocus(const UIelement* ui);
+	const UIelement* GetFocus() const;
 private:
 
 	p2List<UIelement*> elementlist;
-	const UIelement *focus = nullptr;
+	
+	UIelement *focus = nullptr;
 	SDL_Texture* atlas=nullptr;
 	p2SString atlas_file_name;
 

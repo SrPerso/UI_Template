@@ -347,7 +347,7 @@ public:
 				buffer.Alloc(s);
 				delete[] tmp;
 			}
-			strncpy_s(buffer.str, s, &str[start], s);
+			strncpy_s(buffer.str, buffer.size, &str[start], s);
 			buffer.str[s] = '\0';
 			return(end - start);
 		}

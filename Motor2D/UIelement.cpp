@@ -157,6 +157,10 @@ void UIelement::move()
 	}
 }
 
+void UIelement::OnFocus(bool focus)
+{
+}
+
 void UIelement::SetAtMiddle()
 {
 	int frame_w = (Parent) ? Parent->GetLocalRect().w : App->render->camera.w;
@@ -283,7 +287,7 @@ void UIelement::CheckInput(const UIelement* mouse_hover, const UIelement* focus)
 		have_focus = (focus == this);
 	}
 
-	if (have_focus == true && listener != nullptr)
+	if (focus == this && listener != nullptr)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == j1KeyState::KEY_DOWN)
 			App->scene->behaviour(this, mouse_lclick_down);

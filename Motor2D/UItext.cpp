@@ -38,6 +38,7 @@ void UIlabel::SetText(const char* text)
 {
 	if (texture != nullptr)
 		SDL_DestroyTexture(texture);
+
 	texture = App->font->Print(text, { (255),(160),(0),(0) }, App->font->default);
 
 	int w, h;
@@ -78,7 +79,7 @@ UIText::UIText(SDL_Rect section, p2SString defaultText, uint width, p2Point<int>
 	backgro.SetLocalPos(Position.x-20, Position.y-25);
 	max_quantity = Max_quantity;
 	password = Password;
-
+	interactive = true;
 	Deftext = defaultText.GetString();
 
 	show_def_text = true;
@@ -103,26 +104,26 @@ const char* UIText::getText() const
 bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 {
 
-//	CheckInput(mouse_hover, focus);
 
 	bool ret = false;
 
+	/*	// ------------------------------move
 	iPoint MousePos, MousePos2;
 
 	App->input->GetMousePosition(MousePos.x, MousePos.y);
 
-	if (Sons.count() != 0) {
+	//if (Sons.count() != 0) {
 
-		p2List_item<UIelement*>*ite = Sons.start;
+	//	p2List_item<UIelement*>*ite = Sons.start;
 
-		while (ite != nullptr) {
-			if (ite->data->isMoving == true)
-				canUpdate = true;
+	//	while (ite != nullptr) {
+	//		if (ite->data->isMoving == true)
+	//			canUpdate = true;
 
-			ite = ite->next;
-		}
-	}
-	if (canUpdate == false) {
+	//		ite = ite->next;
+	//	}
+	//}
+	//if (canUpdate == false) {
 
 		if (isMouseRect(MousePos.x, MousePos.y) == true) {
 			elementState = MouseIn;
@@ -143,19 +144,20 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 			elementState = MouseOut;
 			isMoving = false;
 		}
-	}
-	canUpdate = false;
+	//}
+	//canUpdate = false;
 
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
 
-
+	*/
 	//------------------------------------------------------------------------------------------------
 
 	if (interactive == false)
 		return false;
 
 	bool inside = (mouse_hover == this);
+
 	bool have_focus = (focus == this);
 
 	if (had_focus != have_focus)
@@ -185,36 +187,34 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 	}
 
 	static p2SString selected(100);
-	if (have_focus == true)
+
+	if (focus == this)
 	{
 
 		int cursor, selection;
-		p2SString user_input = App->input->GetText(cursor, selection);
+
+		const char* user_input = App->input->GetText(cursor, selection);
 
 		if (input != user_input || cursor != last_cursor)
 		{
-			if (input != user_input)
+if (input != user_input)
 			{
-				if (user_input.Length() > this->max_quantity)
-				{
-					user_input = input;
-					cursor = last_cursor;
-					App->input->TextInputTooLong();
-				}
-
 				input = user_input;
-				if (password == true)
-				{
-					p2SString pass_hided;
-					for (int x = input.Length(); x > 0; x--)
-						pass_hided.Insert(0, "*");
-					text.SetText(pass_hided.GetString());
-				}
-				else
-					text.SetText(user_input.GetString());
+				text.SetText(user_input);
 
 				if (listener != nullptr)
 					listener->behaviour(this, input_changed);
+
+			}
+
+			last_cursor = cursor;
+
+			if (password == true)
+			{
+				p2SString pass_hided;
+				for (int x = input.Length(); x > 0; x--)
+					pass_hided.Insert(0, "*");
+				text.SetText(pass_hided.GetString());
 			}
 
 			last_cursor = cursor;
@@ -223,6 +223,7 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 			{
 				if (input.Length() >= selected.GetCapacity())
 					selected.Reserve(input.Length() * 2);
+
 				if (password == true)
 				{
 					p2SString pass_hided;
@@ -231,18 +232,17 @@ bool UIText::update(const UIelement* mouse_hover, const UIelement* focus)
 					pass_hided.SubString(0, cursor, selected);
 					App->font->CalcSize(selected.GetString(), cursor_coords.x, cursor_coords.y);
 				}
-				else
-				{
-					input.SubString(0, cursor, selected);
-					App->font->CalcSize(selected.GetString(), cursor_coords.x, cursor_coords.y);
-				}
+
+				input.SubString(0, cursor, selected);
+				App->font->CalcSize(selected.GetString(), cursor_coords.x, cursor_coords.y);
+
 			}
 			else
 			{
 				cursor_coords.x = 0;
 			}
-			//
 		}
+
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
 			if (listener)
@@ -273,6 +273,14 @@ bool UIText::draw()
 	}
 
 	return true;
+}
+
+void UIText::OnFocus(bool focus)
+{
+	if (focus == true)
+		App->input->StartTyping2();
+	else
+		App->input->StopTyping();
 }
 
 void UIText::move()
@@ -391,12 +399,15 @@ bool UITyper::update(const UIelement* mouse_hover, const UIelement* focus)
 	LastPos.x = MousePos.x;
 	LastPos.y = MousePos.y;
 
-
-
 	if (istyping == true && TXTTYPER) {
 		texture = App->font->Print(App->input->GetText2(), { (255),(160),(0),(0) }, App->font->default);
 	}
-
+	
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		if (listener)
+			listener->behaviour(this, return_down);
+	}
 
 	return ret;
 }

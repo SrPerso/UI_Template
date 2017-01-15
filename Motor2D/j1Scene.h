@@ -7,6 +7,8 @@ struct SDL_Texture;
 class UIlabel;
 class UItext;
 class UIVscrollBar;
+struct Command;
+
 class j1Scene : public j1Module
 {
 public:
@@ -51,6 +53,11 @@ private:
 	UIlabel* title = NULL;
 	UIVscrollBar* Vscroll = NULL;
 	//ui---------------------------
+
+
+	const Command* load = nullptr;
+	const Command* save = nullptr;
+
 };
 
 #endif // __j1SCENE_H__
