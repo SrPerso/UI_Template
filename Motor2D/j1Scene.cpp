@@ -125,8 +125,7 @@ bool j1Scene::Start()
 
 // Called each loop iteration
 bool j1Scene::PreUpdate()
-{
-	
+{	
 	static iPoint origin;
 	static bool origin_selected = false;
 
@@ -223,7 +222,6 @@ bool j1Scene::CleanUp()
 	return true;
 }
 
-
 void j1Scene::behaviour(UIelement* ui, UIEvents event)
 {
 
@@ -303,19 +301,4 @@ void j1Scene::behaviour(UIelement* ui, UIEvents event)
 	}
 
 
-}
-
-
-bool j1Scene::OnCommand(const Command* com, const p2DynArray<p2SString>& arguments, p2SString& return_message)
-{
-	if (com == save)
-	{
-		App->SaveGame(arguments[1].GetString());
-	}
-	else if (com == load)
-	{
-		App->LoadGame(arguments[1].GetString());
-	}
-
-	return false;
 }

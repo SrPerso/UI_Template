@@ -60,7 +60,7 @@ public:
 	bool isMoving = false;
 	bool canUpdate = false;
 	UIelement* Parent = nullptr;
-
+	p2List<UIelement*> Sons;
 protected:
 
 	bool have_focus = false;
@@ -68,7 +68,7 @@ protected:
 protected:
 
 	j1Module* listener = nullptr;
-	p2List<UIelement*> Sons;
+
 	type elementType;
 	p2Point<int> Position;
 	SDL_Rect box;

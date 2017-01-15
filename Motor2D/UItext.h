@@ -10,7 +10,7 @@ public:
 
 	UIlabel();
 	UIlabel(const char* text);
-	UIlabel(const char* text, p2Point<int>);
+	UIlabel(const char* text, p2Point<int>,bool move = true);
 	~UIlabel();
 
 	void SetText(const char* text);

@@ -50,14 +50,13 @@ bool j1Console::Start()
 
 	uint wX, wY;
 	App->win->GetWindowSize(wX, wY);
-	BigRectangle = App->gui->CreateRect({ 0, 0, (int)wX, 200 }, { 74, 74, 74, 100 });
-	BigRectangle->active = false;
-	SmallRectangle = App->gui->CreateRect({ 0, 200,  (int)wX, 43 }, { 108, 123, 139, 100 });
-	SmallRectangle->active = false;
 
-	//InputText = App->gui->Createtyper(UITXTTYPER, SDL_Rect{ 0, 0, 0, 0 }, "Type Here..", p2Point<int>{500, 400}, false);
-	InputText = App->gui->CreateInput({ 0, 1024, (int)wX, 43 }, "type here", 315, { 0, 0 }, false,70, false);
-	InputText->SetLocalPos(0, 200);
+	BigRectangle = App->gui->CreateRect({ 0, 43, (int)wX, 400 }, { 74, 74, 74, 100 });
+	BigRectangle->active = false;
+	SmallRectangle = App->gui->CreateRect({ 0, 0,  (int)wX, 43 }, { 108, 123, 139, 100 });
+	SmallRectangle->active = false;
+	
+	InputText = App->gui->CreateInput({ 0, 1024, (int)wX, 43 }, "Type here", 315, { 0,0 }, false,70, false);
 	InputText->interactive = true;
 	InputText->can_focus = true;
 	InputText->SetListener(this);
@@ -82,8 +81,6 @@ bool j1Console::Start()
 	return ret;
 }
 
-
-
 bool j1Console::Update(float dt)
 {
 	bool ret = true;
@@ -100,6 +97,8 @@ bool j1Console::Update(float dt)
 		
 		}
 	}
+
+
 	return ret;
 }
 
@@ -118,6 +117,9 @@ bool j1Console::PostUpdate()
 bool j1Console::CleanUp()
 {
 	bool ret = true;
+
+	for (int i = 0; i < ComElemList.count(); i++)
+		delete ComElemList[i];
 
 	return ret;
 }
@@ -232,12 +234,16 @@ bool j1Console::GetInput(const char* src)
 				else
 				{
 					LOG("Sent too many arguments");
-					Output(com->Function(&S_input), counter);
+					Output("Sent too many arguments", counter);
+					counter++;
+					//Output(com->Function(&S_input), counter);
 					counter++;
 				}
 			}
 			else
 			{
+				Output("This is not a command",counter);
+				counter++;
 				LOG("'%s' is not an intern command.", S_input[0].GetString());
 			}
 		}
@@ -249,7 +255,9 @@ bool j1Console::GetInput(const char* src)
 
 void j1Console::Output(char* str,int num)
 {
-	UIlabel* out = App->gui->CreateLabel(str, {10, 150 });
+
+	UIlabel* out = App->gui->CreateLabel(str, {10, 5+(num*COMAND_PADDING) },CONSOLE);
+
 	//Set the labbel position according to the scroll
 
 	output.PushBack(out);
@@ -263,6 +271,19 @@ void j1Console::Open()
 	SmallRectangle->active = true;
 	Active = true;
 	App->gui->SetFocus(InputText);
+
+	if (BigRectangle->Sons.count() != 0) {
+
+		p2List_item<UIelement*>*ite = BigRectangle->Sons.start;
+
+		while (ite != nullptr) {
+
+			ite->data->active = true;
+
+			ite = ite->next;
+		}
+	}
+
 }
 
 void j1Console::Close()
@@ -271,7 +292,23 @@ void j1Console::Close()
 	BigRectangle->active = false;
 	SmallRectangle->active = false;
 	Active = false;
+	
+	if (BigRectangle->Sons.count() != 0) {
+
+		p2List_item<UIelement*>*ite = BigRectangle->Sons.start;
+
+		while (ite != nullptr) {
+
+			ite->data->active=false;
+
+			ite = ite->next;
+		}
+	}
+
+
 	InputText->Clear();
+
+
 }
 
 void j1Console::Clear()
@@ -312,8 +349,6 @@ bool j1Console::LoadCVars(pugi::xml_node&)
 
 	return ret;
 }
-
-
 
 void j1Console::CutString(const char* str, p2DynArray<p2SString>* dst)
 {
@@ -397,8 +432,6 @@ void j1Console::SetCVar(const char* calue)
 
 }
 
-
-
 // ------Command--------------------------
 char* Command::Function(const p2DynArray<p2SString>* args)
 {
@@ -406,7 +439,6 @@ char* Command::Function(const p2DynArray<p2SString>* args)
 
 	return nullptr;
 }
-
 // -----CVar------------------------------
 CVar::CVar(const char*  name, float* ref, bool serialize)
 {

@@ -21,19 +21,17 @@ UIlabel::UIlabel(const char* text) : UIelement()
 	elementType = UILABEL;
 }
 
-UIlabel::UIlabel(const char * text, p2Point<int>pos)
+UIlabel::UIlabel(const char * text, p2Point<int>pos, bool move)
 {
 	SetText(text);
 	elementType = UILABEL;
 	Position = pos;
-	canMove = true;
+	canMove = move;
 
 	int w = 0, h = 0;
 	App->font->CalcSize(text, w, h);
 	box = { Position.x,Position.y,w + Position.x,h + Position.y };
 
-
-//	App->font->CalcSize("A", box.x, box.y);
 }
 // --------------------------
 UIlabel::~UIlabel()

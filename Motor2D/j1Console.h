@@ -156,6 +156,9 @@ public:
 
 	void Print(const char* string);
 	void PrintError(const char* string);
+
+	p2List<UIelement*> ComElemList;
+	UIelement* BigRectangle;
 private:
 
 	
@@ -176,11 +179,10 @@ private:
 	p2SString last_message;
 	p2SString last_error;
 	//UI ------------------------------------------------------------------------------------
-	UIelement* BigRectangle;
+
 	UIelement* SmallRectangle;
 	UIelement* InputText = NULL;
 
-	UIlabel* text;
 
 	p2DynArray<UIlabel*> output;
 	bool output_dirty = false;

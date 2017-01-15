@@ -11,6 +11,7 @@
 #include "UIelement.h"
 #include "UIMouse.h"
 #include "UItext.h"
+#include "j1Console.h"
 
 j1Gui::j1Gui() : j1Module()
 {
@@ -275,14 +276,23 @@ UIRect * j1Gui::CreateRect(const SDL_Rect& box, SDL_Color color, bool move)
 }
 
 
-UIlabel * j1Gui::CreateLabel(const char * text, p2Point<int>pos)
+UIlabel * j1Gui::CreateLabel(const char * text, p2Point<int>pos, typegui type )
 {
 	UIlabel*created = NULL;
 
-		if (text != NULL)
-		{
-			created = new UIlabel(text, pos);
+	if (text != NULL)
+	{
+		if (type == CONSOLE) {
+			created = new UIlabel(text, pos,false);
+			created->SetParent(App->console->BigRectangle);
 			elementlist.add(created);
+
+			return created;
+		}
+
+		created = new UIlabel(text, pos);
+		elementlist.add(created);
+
 		}
 
 	return created;
